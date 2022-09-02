@@ -1,0 +1,4 @@
+-Video game style interactive app with ascii art 
+-Take Maria through various stages from our relationship
+-and various key/funny moments 
+-"Which month would you like to explore" get input and show cool stuff about January(example)
