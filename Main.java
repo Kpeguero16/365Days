@@ -1,31 +1,50 @@
-import java.util.Scanner;
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.border.Border;
+
 public class Main {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("\n\n\n\n\n\n\nWelcome Maria");
 
-        System.out.println("Here are your options:");
-        System.out.println("\n0. Introduction");
-        System.out.println("1. September");
-        System.out.println("2. October");
-        System.out.println("3. November");
-        System.out.println("4. December");
-        System.out.println("5. January");
-        System.out.println("6. February");
-        System.out.println("7. March");
-        System.out.println("8. April");
-        System.out.println("9. May");
-        System.out.println("10. June");
-        System.out.println("11. July");
-        System.out.println("12. August");
+        Border border = BorderFactory.createLineBorder(new Color(255, 250, 250), 2);
 
+        JLabel introduction = new JLabel("0. Introduction");
+        // introduction.setText("0. Introduction");
+        // introduction.setIcon(image);
+        introduction.setForeground(new Color(255, 250, 250));
+        introduction.setFont(new Font("Times New Roman",Font.BOLD, 16));
+        introduction.setBorder(border);
+        introduction.setHorizontalAlignment(JLabel.CENTER);
+        introduction.setBounds(100,150, 225, 400);
 
-
+        JLabel september = new JLabel();
+        september.setText("1. September");
+        september.setForeground(new Color(255, 250, 250));
+        september.setFont(new Font("Times New Roman",Font.BOLD, 16));
+        september.setBorder(border);
+        september.setHorizontalAlignment(JLabel.CENTER);
 
 
+        JFrame frame = new JFrame();
+        frame.setTitle("365 Days");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setSize(450,800);
+        frame.setLayout(null);
+        frame.setVisible(true); 
+        frame.getContentPane().setBackground(new Color(199,43,80));
+        frame.add(introduction);
+        frame.add(september);
 
 
 
-        input.close();
+
+
+
+
+
     }
 }
