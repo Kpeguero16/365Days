@@ -31,6 +31,10 @@ h3{
     font-size: 1.75vw;
     margin:0;
 }
+p{
+  font-family: 'Single Day', cursive;
+  color: snow;
+}
 .logIn{
     display: flex;
     justify-content: center;
