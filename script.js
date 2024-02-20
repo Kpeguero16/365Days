@@ -4,7 +4,8 @@ function checkPassword(){
 
 function display(){
     if(checkPassword()){
-        window.location.replace("https://kpeguero16.github.io/365Days/menu");
+        // window.location.replace("https://kpeguero16.github.io/365Days/menu");
+        window.location.href = "menu.html"
     } 
     else{
 
