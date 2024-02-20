@@ -116,6 +116,19 @@ a:active {
   align-items: center;
 }
 
+.menu{
+  width: 50vw;
+
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+}
+.menu-item{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
 /* @media (max-width: 600px) {
   header {
     height: 30vh; 
