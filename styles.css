@@ -37,6 +37,21 @@ p{
   color: snow;
   font-size: 2vw;
 }
+a {
+  text-decoration: none; 
+  cursor: pointer;
+}
+a:visited {
+  color: rgb(246, 177, 122);/* Set color for visited links */
+}
+
+a:hover {
+  color: rgb(246, 177, 122); /* Set color for links on hover */
+}
+
+a:active {
+  color: rgb(61, 12, 17);/* Set color for active links (when clicked) */
+}
 #footnote{
   padding-left: 5%;
   padding-right: 5%;
