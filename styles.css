@@ -38,15 +38,9 @@ p{
   font-size: 2vw;
 }
 a {
+  color: rgb(246, 177, 122);
   text-decoration: none; 
   cursor: pointer;
-}
-a:visited {
-  color: rgb(246, 177, 122);/* Set color for visited links */
-}
-
-a:hover {
-  color: rgb(246, 177, 122); /* Set color for links on hover */
 }
 
 a:active {
