@@ -109,18 +109,26 @@ a:active {
   justify-content: center;
   align-items: center;
 }
-
 .menu{
   width: 50vw;
-
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
 }
-.menu-item{
+
+.months{
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
+}
+.menu-item{
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-evenly;
+}
+
+#introduction{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
 }
 
 /* @media (max-width: 600px) {
