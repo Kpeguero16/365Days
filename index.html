@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>For Us - Our Day</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+  <link rel="preload" href="styles/base.css" as="style">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/effects.css">
+</head>
+<body>
+  <div class="gate">
+    <div class="gate-card">
+      <h1>Our Day</h1>
+      <p>Enter our anniversary date to begin</p>
+      <label for="anniv">Anniversary date</label>
+      <input id="anniv" type="date" autocomplete="off" />
+      <button id="enterBtn" type="button">Begin</button>
+      <p id="gateMsg" class="gate-msg" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script src="scripts/gate.js" defer></script>
+</body>
+</html>
