@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>For Us - Our Journey</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+  <link rel="preload" href="styles/base.css" as="style">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/effects.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">For Us</div>
+      <nav id="timeline" class="timeline"></nav>
+      <div class="player">
+        <button id="musicToggle" aria-pressed="false">Play music</button>
+      </div>
+    </aside>
+
+    <main id="content" class="content scroll-snap-y">
+      <!-- Sections injected by JS -->
+    </main>
+  </div>
+
+  <audio id="bgAudio" src="assets/audio/background.mp3" preload="none"></audio>
+
+  <script src="scripts/content.js" defer></script>
+  <script src="scripts/media.js" defer></script>
+  <script src="scripts/music.js" defer></script>
+  <script src="scripts/app.js" defer></script>
+  <script src="scripts/easter.js" defer></script>
+</body>
+</html>

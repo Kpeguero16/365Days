@@ -1,0 +1,36 @@
+.gate { display: grid; place-items: center; min-height: 100vh; padding: 40px; }
+.gate-card { width: 100%; max-width: 440px; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 28px; text-align: center; }
+.gate-card h1 { margin: 0 0 8px; }
+.gate-card label { display: block; margin: 16px 0 6px; color: var(--muted); }
+.gate-card input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid #e8e3e1; background: #fff; }
+.gate-card button { margin-top: 14px; width: 100%; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; }
+.gate-msg { min-height: 1.2em; color: var(--muted); margin-top: 10px; }
+
+.app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.sidebar { position: sticky; top: 0; align-self: start; height: 100vh; padding: 24px; border-right: 1px solid #ede8e6; background: linear-gradient(180deg, #fff, #f9f6f4); }
+.brand { font-weight: 700; font-size: 20px; margin-bottom: 20px; }
+.timeline { display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 160px); overflow: auto; padding-right: 8px; }
+.timeline a { color: var(--text); text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 14px; transition: all 200ms ease; }
+.timeline a.active, .timeline a:hover { background: #efe7e5; color: var(--accent); }
+.timeline .trip { margin-left: 16px; font-size: 13px; color: var(--muted); }
+.timeline .trip.active, .timeline .trip:hover { color: var(--accent); }
+.player { position: absolute; bottom: 20px; left: 24px; right: 24px; }
+.player button { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #e8e3e1; background: #fff; }
+
+.content { height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
+.scroll-snap-y { scroll-snap-type: y mandatory; }
+.section { scroll-snap-align: start; min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 48px; }
+.section .section-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.trip-section { padding: 32px 48px; border-top: 1px solid #ede8e6; }
+.trip-title { font-size: 20px; margin: 0 0 16px; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-content: start; }
+.card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+.card img, .card video { width: 100%; height: auto; display: block; max-width: 100%; object-fit: cover; }
+.card .meta { padding: 12px 14px; color: var(--muted); font-size: 14px; }
+
+/* Welcome overlay */
+.welcome { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; }
+.welcome-card { width: 100%; max-width: 560px; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 32px; text-align: center; }
+.welcome-card h2 { margin-top: 0; }
+.welcome-card button { margin-top: 12px; padding: 12px 16px; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; font-size: 16px; }
+.welcome-card button:hover { background: #a06666; }

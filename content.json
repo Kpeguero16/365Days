@@ -1,0 +1,39 @@
+{
+  "items": [
+    {
+      "id": "first_memory",
+      "type": "image",
+      "src": "assets/images/0E13A9A5-2409-4353-A8D2-81F2F377DF48_1_105_c.jpeg",
+      "date": "2021-09-12",
+      "caption": "The day after our anniversary"
+    },
+    {
+      "id": "smile_moment",
+      "type": "image", 
+      "src": "assets/images/2D636C04-9879-4A3F-BF79-0A0A57D208C6_1_105_c.jpeg",
+      "date": "2021-10-01",
+      "caption": "Your beautiful smile"
+    },
+    {
+      "id": "autumn_walk",
+      "type": "image",
+      "src": "assets/images/1933BB98-A578-4864-9F08-C7696D29A5AC_1_105_c.jpeg", 
+      "date": "2021-10-15",
+      "caption": "Autumn walk together"
+    },
+    {
+      "id": "cozy_moment",
+      "type": "image",
+      "src": "assets/images/EFDA9688-B862-413D-8AE9-07574EB3310E_1_105_c.jpeg",
+      "date": "2021-11-02", 
+      "caption": "Cozy evening at home"
+    },
+    {
+      "id": "winter_beginning",
+      "type": "image",
+      "src": "assets/images/FB74F429-E852-4D96-B327-7911E4718983_1_105_c.jpeg",
+      "date": "2021-12-01",
+      "caption": "Winter is coming"
+    }
+  ]
+}
