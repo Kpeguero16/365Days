@@ -26,8 +26,20 @@
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(it);
     }
+    
+    // Sort items within each season by date (oldest first)
+    for (const [season, items] of map) {
+      items.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+    
+    // Sort seasons by the earliest date in each season (oldest first)
     const entries = Array.from(map.entries());
-    entries.sort((a,b) => b[0].localeCompare(a[0]));
+    entries.sort((a, b) => {
+      const aEarliest = Math.min(...a[1].map(item => new Date(item.date)));
+      const bEarliest = Math.min(...b[1].map(item => new Date(item.date)));
+      return aEarliest - bEarliest;
+    });
+    
     return entries.map(([season, arr]) => {
       // Group by trip within season
       const tripMap = new Map();

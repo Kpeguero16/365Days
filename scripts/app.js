@@ -61,9 +61,22 @@
         <div></div>
       `;
       const grid = secEl.querySelector('.grid');
-      for (const item of sec.items) {
+      
+      // Separate poems and other items
+      const poems = sec.items.filter(item => item.type === 'poem');
+      const otherItems = sec.items.filter(item => item.type !== 'poem');
+      
+      // Add poems first, spanning full width
+      poems.forEach(poem => {
+        const poemCard = renderItem(poem);
+        poemCard.style.gridColumn = '1 / -1'; // Span all columns
+        grid.appendChild(poemCard);
+      });
+      
+      // Add other items
+      otherItems.forEach(item => {
         grid.appendChild(renderItem(item));
-      }
+      });
       
       // Add trip subsections
       if (sec.trips && sec.trips.length > 0) {
@@ -76,9 +89,22 @@
             <div class="grid"></div>
           `;
           const tripGrid = tripEl.querySelector('.grid');
-          for (const item of trip.items) {
+          
+          // Separate poems and other items for trips too
+          const tripPoems = trip.items.filter(item => item.type === 'poem');
+          const tripOtherItems = trip.items.filter(item => item.type !== 'poem');
+          
+          // Add poems first, spanning full width
+          tripPoems.forEach(poem => {
+            const poemCard = renderItem(poem);
+            poemCard.style.gridColumn = '1 / -1'; // Span all columns
+            tripGrid.appendChild(poemCard);
+          });
+          
+          // Add other items
+          tripOtherItems.forEach(item => {
             tripGrid.appendChild(renderItem(item));
-          }
+          });
           contentEl.appendChild(tripEl);
         });
       }
@@ -105,8 +131,9 @@
       if (item.poster) v.setAttribute('data-poster', item.poster);
       card.appendChild(v);
     } else if (item.type === 'poem') {
+      card.classList.add('poem');
       const div = document.createElement('div');
-      div.style.padding = '16px';
+      div.style.padding = '20px';
       div.innerHTML = `<h3>${escapeHtml(item.title || 'Poem')}</h3><p>${escapeHtml(item.text || '')}</p>`;
       card.appendChild(div);
     } else {
@@ -130,14 +157,29 @@
   function setupScrollSpy() {
     const links = Array.from(timelineEl.querySelectorAll('a'));
     const map = new Map(links.map(a => [a.getAttribute('href')?.slice(1), a]));
+    
     const io = new IntersectionObserver(entries => {
+      // Find the section that's most visible
+      let mostVisible = null;
+      let maxRatio = 0;
+      
       for (const e of entries) {
-        if (e.isIntersecting) {
-          const id = e.target.id;
-          links.forEach(a => a.classList.toggle('active', a === map.get(id)));
+        if (e.isIntersecting && e.intersectionRatio > maxRatio) {
+          maxRatio = e.intersectionRatio;
+          mostVisible = e.target;
         }
       }
-    }, { root: contentEl, threshold: 0.6 });
+      
+      if (mostVisible) {
+        const id = mostVisible.id;
+        links.forEach(a => a.classList.toggle('active', a === map.get(id)));
+      }
+    }, { 
+      root: contentEl, 
+      threshold: [0.1, 0.3, 0.5, 0.7, 0.9],
+      rootMargin: '-10% 0px -10% 0px'
+    });
+    
     document.querySelectorAll('.section').forEach(sec => io.observe(sec));
   }
 
@@ -146,9 +188,23 @@
       e.preventDefault();
       const href = e.target.getAttribute('href');
       if (!href) return;
+      
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Temporarily disable scroll-snap for smooth navigation
+        contentEl.style.scrollSnapType = 'none';
+        
+        // Use scrollIntoView with smooth behavior for the animation
+        target.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+        
+        // Re-enable scroll-snap after scroll completes
+        setTimeout(() => {
+          contentEl.style.scrollSnapType = 'y mandatory';
+        }, 1000);
       }
     });
   }
