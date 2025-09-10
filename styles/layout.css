@@ -27,6 +27,28 @@
 .card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
 .card img, .card video { width: 100%; height: auto; display: block; max-width: 100%; object-fit: cover; }
 .card .meta { padding: 12px 14px; color: var(--muted); font-size: 14px; }
+.card.poem { 
+  background: linear-gradient(135deg, #f8f6f3, #f0ede8); 
+  border: 1px solid #e8e3e1; 
+  text-align: center;
+  margin-bottom: 24px;
+}
+.card.poem h3 { 
+  font-family: "EB Garamond", Georgia, serif; 
+  font-size: 24px; 
+  margin: 0 0 16px; 
+  color: var(--text); 
+  font-weight: 400;
+}
+.card.poem p { 
+  font-style: italic; 
+  line-height: 1.8; 
+  color: var(--muted); 
+  margin: 0; 
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
 /* Welcome overlay */
 .welcome { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; }

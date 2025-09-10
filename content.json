@@ -1,39 +1,910 @@
 {
   "items": [
     {
-      "id": "first_memory",
-      "type": "image",
-      "src": "assets/images/0E13A9A5-2409-4353-A8D2-81F2F377DF48_1_105_c.jpeg",
-      "date": "2021-09-12",
-      "caption": "The day after our anniversary"
+      "id": "fall_2021_poem",
+      "type": "poem",
+      "title": "The Beginning",
+      "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+      "date": "2021-09-11"
     },
     {
-      "id": "smile_moment",
-      "type": "image", 
-      "src": "assets/images/2D636C04-9879-4A3F-BF79-0A0A57D208C6_1_105_c.jpeg",
-      "date": "2021-10-01",
-      "caption": "Your beautiful smile"
+      "id": "2021_09_17_16_52_07",
+      "type": "image",
+      "src": "assets/images/2021-09-17_16-52-07.jpeg",
+      "date": "2021-09-17",
+      "caption": "16 52 07",
+      "fileSize": 915758
     },
     {
-      "id": "autumn_walk",
+      "id": "2021_09_22_09_03_20",
       "type": "image",
-      "src": "assets/images/1933BB98-A578-4864-9F08-C7696D29A5AC_1_105_c.jpeg", 
+      "src": "assets/images/2021-09-22_09-03-20.jpeg",
+      "date": "2021-09-22",
+      "caption": "09 03 20",
+      "fileSize": 842731
+    },
+    {
+      "id": "2021_09_24_21_10_36",
+      "type": "image",
+      "src": "assets/images/2021-09-24_21-10-36.jpeg",
+      "date": "2021-09-24",
+      "caption": "21 10 36",
+      "fileSize": 831564
+    },
+    {
+      "id": "2021_09_24_21_11_27",
+      "type": "image",
+      "src": "assets/images/2021-09-24_21-11-27.jpeg",
+      "date": "2021-09-24",
+      "caption": "21 11 27",
+      "fileSize": 807240
+    },
+    {
+      "id": "2021_09_25_16_09_25",
+      "type": "image",
+      "src": "assets/images/2021-09-25_16-09-25.jpeg",
+      "date": "2021-09-25",
+      "caption": "16 09 25",
+      "fileSize": 1767836
+    },
+    {
+      "id": "2021_09_28_14_53_14",
+      "type": "image",
+      "src": "assets/images/2021-09-28_14-53-14.jpeg",
+      "date": "2021-09-28",
+      "caption": "14 53 14",
+      "fileSize": 1010168
+    },
+    {
+      "id": "2021_10_08_07_51_40",
+      "type": "image",
+      "src": "assets/images/2021-10-08_07-51-40.jpeg",
+      "date": "2021-10-08",
+      "caption": "07 51 40",
+      "fileSize": 925136
+    },
+    {
+      "id": "2021_10_12_17_41_59",
+      "type": "image",
+      "src": "assets/images/2021-10-12_17-41-59.jpeg",
+      "date": "2021-10-12",
+      "caption": "17 41 59",
+      "fileSize": 124096
+    },
+    {
+      "id": "2021_10_15_18_45_29",
+      "type": "image",
+      "src": "assets/images/2021-10-15_18-45-29.jpeg",
       "date": "2021-10-15",
-      "caption": "Autumn walk together"
+      "caption": "18 45 29",
+      "fileSize": 939979
     },
     {
-      "id": "cozy_moment",
+      "id": "2021_10_16_22_24_20",
       "type": "image",
-      "src": "assets/images/EFDA9688-B862-413D-8AE9-07574EB3310E_1_105_c.jpeg",
-      "date": "2021-11-02", 
-      "caption": "Cozy evening at home"
+      "src": "assets/images/2021-10-16_22-24-20.jpeg",
+      "date": "2021-10-16",
+      "caption": "22 24 20",
+      "fileSize": 962997
     },
     {
-      "id": "winter_beginning",
+      "id": "2021_10_23_14_19_40",
       "type": "image",
-      "src": "assets/images/FB74F429-E852-4D96-B327-7911E4718983_1_105_c.jpeg",
-      "date": "2021-12-01",
-      "caption": "Winter is coming"
+      "src": "assets/images/2021-10-23_14-19-40.jpeg",
+      "date": "2021-10-23",
+      "caption": "14 19 40",
+      "fileSize": 1465445
+    },
+    {
+      "id": "2021_10_31_18_56_17",
+      "type": "image",
+      "src": "assets/images/2021-10-31_18-56-17.jpeg",
+      "date": "2021-10-31",
+      "caption": "18 56 17",
+      "fileSize": 367783
+    },
+    {
+      "id": "2021_10_31_18_56_35",
+      "type": "image",
+      "src": "assets/images/2021-10-31_18-56-35.jpeg",
+      "date": "2021-10-31",
+      "caption": "18 56 35",
+      "fileSize": 325481
+    },
+    {
+      "id": "2021_10_31_20_08_36",
+      "type": "image",
+      "src": "assets/images/2021-10-31_20-08-36.jpeg",
+      "date": "2021-10-31",
+      "caption": "20 08 36",
+      "fileSize": 1059692
+    },
+    {
+      "id": "2021_11_06_12_46_17",
+      "type": "image",
+      "src": "assets/images/2021-11-06_12-46-17.jpeg",
+      "date": "2021-11-06",
+      "caption": "12 46 17",
+      "fileSize": 2315658
+    },
+    {
+      "id": "2021_11_06_12_49_41",
+      "type": "image",
+      "src": "assets/images/2021-11-06_12-49-41.jpeg",
+      "date": "2021-11-06",
+      "caption": "12 49 41",
+      "fileSize": 2271917
+    },
+    {
+      "id": "2021_11_06_13_01_36_JPG",
+      "type": "image",
+      "src": "assets/images/2021-11-06_13-01-36.JPG",
+      "date": "2021-11-06",
+      "caption": "13 01 36.JPG",
+      "fileSize": 882572
+    },
+    {
+      "id": "2021_11_18_07_21_40",
+      "type": "image",
+      "src": "assets/images/2021-11-18_07-21-40.jpeg",
+      "date": "2021-11-18",
+      "caption": "07 21 40",
+      "fileSize": 1620648
+    },
+    {
+      "id": "2021_11_18_16_55_58_JPG",
+      "type": "image",
+      "src": "assets/images/2021-11-18_16-55-58.JPG",
+      "date": "2021-11-18",
+      "caption": "16 55 58.JPG",
+      "fileSize": 598534
+    },
+    {
+      "id": "2021_11_24_13_45_47",
+      "type": "image",
+      "src": "assets/images/2021-11-24_13-45-47.jpeg",
+      "date": "2021-11-24",
+      "caption": "13 45 47",
+      "fileSize": 1072098
+    },
+    {
+      "id": "2021_11_25_21_48_31",
+      "type": "image",
+      "src": "assets/images/2021-11-25_21-48-31.jpeg",
+      "date": "2021-11-25",
+      "caption": "21 48 31",
+      "fileSize": 933199
+    },
+    {
+      "id": "winter_2021_poem",
+      "type": "poem",
+      "title": "Winter's Embrace",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "date": "2021-12-01"
+    },
+    {
+      "id": "2021_12_06_07_20_32",
+      "type": "image",
+      "src": "assets/images/2021-12-06_07-20-32.jpeg",
+      "date": "2021-12-06",
+      "caption": "07 20 32",
+      "fileSize": 1460717
+    },
+    {
+      "id": "2021_12_07_07_15_04",
+      "type": "image",
+      "src": "assets/images/2021-12-07_07-15-04.jpeg",
+      "date": "2021-12-07",
+      "caption": "07 15 04",
+      "fileSize": 986446
+    },
+    {
+      "id": "2021_12_11_19_49_40",
+      "type": "image",
+      "src": "assets/images/2021-12-11_19-49-40.jpeg",
+      "date": "2021-12-11",
+      "caption": "19 49 40",
+      "fileSize": 838294
+    },
+    {
+      "id": "2021_12_11_23_45_13",
+      "type": "image",
+      "src": "assets/images/2021-12-11_23-45-13.jpeg",
+      "date": "2021-12-11",
+      "caption": "23 45 13",
+      "fileSize": 479799
+    },
+    {
+      "id": "2021_12_17_10_54_19",
+      "type": "image",
+      "src": "assets/images/2021-12-17_10-54-19.jpeg",
+      "date": "2021-12-17",
+      "caption": "10 54 19",
+      "fileSize": 828112
+    },
+    {
+      "id": "2022_01_08_16_05_20",
+      "type": "image",
+      "src": "assets/images/2022-01-08_16-05-20.jpeg",
+      "date": "2022-01-08",
+      "caption": "16 05 20",
+      "fileSize": 1622519
+    },
+    {
+      "id": "2022_01_09_17_34_32",
+      "type": "image",
+      "src": "assets/images/2022-01-09_17-34-32.jpeg",
+      "date": "2022-01-09",
+      "caption": "17 34 32",
+      "fileSize": 460955
+    },
+    {
+      "id": "2022_01_11_10_05_08",
+      "type": "image",
+      "src": "assets/images/2022-01-11_10-05-08.jpeg",
+      "date": "2022-01-11",
+      "caption": "10 05 08",
+      "fileSize": 1111898
+    },
+    {
+      "id": "2022_01_17_13_49_52",
+      "type": "image",
+      "src": "assets/images/2022-01-17_13-49-52.jpeg",
+      "date": "2022-01-17",
+      "caption": "13 49 52",
+      "fileSize": 808855
+    },
+    {
+      "id": "2022_02_12_21_21_17",
+      "type": "image",
+      "src": "assets/images/2022-02-12_21-21-17.jpeg",
+      "date": "2022-02-12",
+      "caption": "21 21 17",
+      "fileSize": 1380483
+    },
+    {
+      "id": "2022_02_25_18_13_52",
+      "type": "image",
+      "src": "assets/images/2022-02-25_18-13-52.jpeg",
+      "date": "2022-02-25",
+      "caption": "18 13 52",
+      "fileSize": 1271043
+    },
+    {
+      "id": "2022_02_25_18_13_57",
+      "type": "image",
+      "src": "assets/images/2022-02-25_18-13-57.jpeg",
+      "date": "2022-02-25",
+      "caption": "18 13 57",
+      "fileSize": 1348613
+    },
+    {
+      "id": "spring_2022_poem",
+      "type": "poem",
+      "title": "Spring's Awakening",
+      "text": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "date": "2022-03-01"
+    },
+    {
+      "id": "2022_03_05_19_49_12",
+      "type": "image",
+      "src": "assets/images/2022-03-05_19-49-12.jpg",
+      "date": "2022-03-05",
+      "caption": "19 49 12",
+      "fileSize": 121585
+    },
+    {
+      "id": "2022_03_18_15_23_41",
+      "type": "image",
+      "src": "assets/images/2022-03-18_15-23-41.jpg",
+      "date": "2022-03-18",
+      "caption": "15 23 41",
+      "fileSize": 405186
+    },
+    {
+      "id": "2022_03_21_17_27_27",
+      "type": "image",
+      "src": "assets/images/2022-03-21_17-27-27.jpeg",
+      "date": "2022-03-21",
+      "caption": "17 27 27",
+      "fileSize": 1420524
+    },
+    {
+      "id": "2022_03_21_17_30_07",
+      "type": "image",
+      "src": "assets/images/2022-03-21_17-30-07.jpeg",
+      "date": "2022-03-21",
+      "caption": "17 30 07",
+      "fileSize": 1056378
+    },
+    {
+      "id": "2022_04_09_15_11_51",
+      "type": "image",
+      "src": "assets/images/2022-04-09_15-11-51.jpeg",
+      "date": "2022-04-09",
+      "caption": "15 11 51",
+      "fileSize": 3033170
+    },
+    {
+      "id": "2022_04_09_15_15_14",
+      "type": "image",
+      "src": "assets/images/2022-04-09_15-15-14.jpeg",
+      "date": "2022-04-09",
+      "caption": "15 15 14",
+      "fileSize": 3608220
+    },
+    {
+      "id": "2022_05_15_12_22_52",
+      "type": "image",
+      "src": "assets/images/2022-05-15_12-22-52.jpeg",
+      "date": "2022-05-15",
+      "caption": "12 22 52",
+      "fileSize": 1215546
+    },
+    {
+      "id": "2022_05_22_11_14_21",
+      "type": "image",
+      "src": "assets/images/2022-05-22_11-14-21.jpeg",
+      "date": "2022-05-22",
+      "caption": "11 14 21",
+      "fileSize": 1462705
+    },
+    {
+      "id": "summer_2022_poem",
+      "type": "poem",
+      "title": "Summer's Radiance",
+      "text": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+      "date": "2022-06-01"
+    },
+    {
+      "id": "2022_06_05_21_12_16",
+      "type": "image",
+      "src": "assets/images/2022-06-05_21-12-16.jpeg",
+      "date": "2022-06-05",
+      "caption": "21 12 16",
+      "fileSize": 974969
+    },
+    {
+      "id": "2022_06_05_21_13_19",
+      "type": "image",
+      "src": "assets/images/2022-06-05_21-13-19.jpeg",
+      "date": "2022-06-05",
+      "caption": "21 13 19",
+      "fileSize": 1320309
+    },
+    {
+      "id": "2022_06_05_21_13_23",
+      "type": "image",
+      "src": "assets/images/2022-06-05_21-13-23.jpeg",
+      "date": "2022-06-05",
+      "caption": "21 13 23",
+      "fileSize": 1059267
+    },
+    {
+      "id": "2022_07_11_20_16_15",
+      "type": "image",
+      "src": "assets/images/2022-07-11_20-16-15.jpeg",
+      "date": "2022-07-11",
+      "caption": "20 16 15",
+      "fileSize": 764131
+    },
+    {
+      "id": "2022_07_16_22_00_40",
+      "type": "image",
+      "src": "assets/images/2022-07-16_22-00-40.jpeg",
+      "date": "2022-07-16",
+      "caption": "22 00 40",
+      "fileSize": 1092704
+    },
+    {
+      "id": "2022_07_16_22_08_38",
+      "type": "image",
+      "src": "assets/images/2022-07-16_22-08-38.jpeg",
+      "date": "2022-07-16",
+      "caption": "22 08 38",
+      "fileSize": 1709770
+    },
+    {
+      "id": "2022_07_23_17_01_55",
+      "type": "image",
+      "src": "assets/images/2022-07-23_17-01-55.jpeg",
+      "date": "2022-07-23",
+      "caption": "17 01 55",
+      "fileSize": 1677984
+    },
+    {
+      "id": "2022_08_08_19_26_45",
+      "type": "image",
+      "src": "assets/images/2022-08-08_19-26-45.jpeg",
+      "date": "2022-08-08",
+      "caption": "19 26 45",
+      "fileSize": 1433826
+    },
+    {
+      "id": "2022_08_08_23_44_55",
+      "type": "image",
+      "src": "assets/images/2022-08-08_23-44-55.jpeg",
+      "date": "2022-08-08",
+      "caption": "23 44 55",
+      "fileSize": 1113345
+    },
+    {
+      "id": "2022_08_08_23_45_04",
+      "type": "image",
+      "src": "assets/images/2022-08-08_23-45-04.jpeg",
+      "date": "2022-08-08",
+      "caption": "23 45 04",
+      "fileSize": 1117296
+    },
+    {
+      "id": "2022_08_19_07_11_49",
+      "type": "image",
+      "src": "assets/images/2022-08-19_07-11-49.jpeg",
+      "date": "2022-08-19",
+      "caption": "07 11 49",
+      "fileSize": 1172870
+    },
+    {
+      "id": "2022_08_19_07_11_51",
+      "type": "image",
+      "src": "assets/images/2022-08-19_07-11-51.jpeg",
+      "date": "2022-08-19",
+      "caption": "07 11 51",
+      "fileSize": 1564011
+    },
+    {
+      "id": "2022_08_19_07_11_59",
+      "type": "image",
+      "src": "assets/images/2022-08-19_07-11-59.jpeg",
+      "date": "2022-08-19",
+      "caption": "07 11 59",
+      "fileSize": 1368951
+    },
+    {
+      "id": "2022_08_27_17_09_38",
+      "type": "image",
+      "src": "assets/images/2022-08-27_17-09-38.jpeg",
+      "date": "2022-08-27",
+      "caption": "17 09 38",
+      "fileSize": 1185595
+    },
+    {
+      "id": "fall_2022_poem",
+      "type": "poem",
+      "title": "Another Autumn",
+      "text": "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio nam libero tempore cum soluta nobis est eligendi optio.",
+      "date": "2022-09-01"
+    },
+    {
+      "id": "2022_09_03_22_45_49",
+      "type": "image",
+      "src": "assets/images/2022-09-03_22-45-49.jpeg",
+      "date": "2022-09-03",
+      "caption": "22 45 49",
+      "fileSize": 1222579
+    },
+    {
+      "id": "2022_09_03_22_46_15",
+      "type": "image",
+      "src": "assets/images/2022-09-03_22-46-15.jpeg",
+      "date": "2022-09-03",
+      "caption": "22 46 15",
+      "fileSize": 1302876
+    },
+    {
+      "id": "2022_09_03_23_15_49",
+      "type": "image",
+      "src": "assets/images/2022-09-03_23-15-49.jpeg",
+      "date": "2022-09-03",
+      "caption": "23 15 49",
+      "fileSize": 1535357
+    },
+    {
+      "id": "2022_09_03_23_17_08",
+      "type": "image",
+      "src": "assets/images/2022-09-03_23-17-08.jpeg",
+      "date": "2022-09-03",
+      "caption": "23 17 08",
+      "fileSize": 1072935
+    },
+    {
+      "id": "2022_09_04_22_10_32",
+      "type": "image",
+      "src": "assets/images/2022-09-04_22-10-32.jpeg",
+      "date": "2022-09-04",
+      "caption": "22 10 32",
+      "fileSize": 723942
+    },
+    {
+      "id": "2022_09_04_22_10_33",
+      "type": "image",
+      "src": "assets/images/2022-09-04_22-10-33.jpeg",
+      "date": "2022-09-04",
+      "caption": "22 10 33",
+      "fileSize": 714076
+    },
+    {
+      "id": "2022_09_04_22_10_38",
+      "type": "image",
+      "src": "assets/images/2022-09-04_22-10-38.jpeg",
+      "date": "2022-09-04",
+      "caption": "22 10 38",
+      "fileSize": 2256931
+    },
+    {
+      "id": "2022_09_07_19_42_01",
+      "type": "image",
+      "src": "assets/images/2022-09-07_19-42-01.jpeg",
+      "date": "2022-09-07",
+      "caption": "19 42 01",
+      "fileSize": 1395920
+    },
+    {
+      "id": "2022_09_07_19_42_02",
+      "type": "image",
+      "src": "assets/images/2022-09-07_19-42-02.jpeg",
+      "date": "2022-09-07",
+      "caption": "19 42 02",
+      "fileSize": 1412637
+    },
+    {
+      "id": "2022_09_07_19_42_03",
+      "type": "image",
+      "src": "assets/images/2022-09-07_19-42-03.jpeg",
+      "date": "2022-09-07",
+      "caption": "19 42 03",
+      "fileSize": 1183913
+    },
+    {
+      "id": "2022_09_10_14_17_32",
+      "type": "image",
+      "src": "assets/images/2022-09-10_14-17-32.jpeg",
+      "date": "2022-09-10",
+      "caption": "14 17 32",
+      "fileSize": 1056734
+    },
+    {
+      "id": "2022_09_10_14_18_13",
+      "type": "image",
+      "src": "assets/images/2022-09-10_14-18-13.jpeg",
+      "date": "2022-09-10",
+      "caption": "14 18 13",
+      "fileSize": 1472485
+    },
+    {
+      "id": "2022_09_10_14_57_10",
+      "type": "image",
+      "src": "assets/images/2022-09-10_14-57-10.jpeg",
+      "date": "2022-09-10",
+      "caption": "14 57 10",
+      "fileSize": 1827492
+    },
+    {
+      "id": "2022_09_10_21_28_57",
+      "type": "image",
+      "src": "assets/images/2022-09-10_21-28-57.jpeg",
+      "date": "2022-09-10",
+      "caption": "21 28 57",
+      "fileSize": 1380076
+    },
+    {
+      "id": "2022_09_11_18_33_40",
+      "type": "image",
+      "src": "assets/images/2022-09-11_18-33-40.jpeg",
+      "date": "2022-09-11",
+      "caption": "18 33 40",
+      "fileSize": 1277344
+    },
+    {
+      "id": "2022_09_11_18_34_36",
+      "type": "image",
+      "src": "assets/images/2022-09-11_18-34-36.jpeg",
+      "date": "2022-09-11",
+      "caption": "18 34 36",
+      "fileSize": 1063940
+    },
+    {
+      "id": "2022_09_11_19_49_29",
+      "type": "image",
+      "src": "assets/images/2022-09-11_19-49-29.jpeg",
+      "date": "2022-09-11",
+      "caption": "19 49 29",
+      "fileSize": 1652363
+    },
+    {
+      "id": "2022_09_22_20_34_14",
+      "type": "image",
+      "src": "assets/images/2022-09-22_20-34-14.jpeg",
+      "date": "2022-09-22",
+      "caption": "20 34 14",
+      "fileSize": 1505370
+    },
+    {
+      "id": "2022_09_25_12_11_19",
+      "type": "image",
+      "src": "assets/images/2022-09-25_12-11-19.jpeg",
+      "date": "2022-09-25",
+      "caption": "12 11 19",
+      "fileSize": 1466058
+    },
+    {
+      "id": "2022_09_26_12_25_38",
+      "type": "image",
+      "src": "assets/images/2022-09-26_12-25-38.jpeg",
+      "date": "2022-09-26",
+      "caption": "12 25 38",
+      "fileSize": 1304414
+    },
+    {
+      "id": "2022_09_30_19_42_43",
+      "type": "image",
+      "src": "assets/images/2022-09-30_19-42-43.jpeg",
+      "date": "2022-09-30",
+      "caption": "19 42 43",
+      "fileSize": 1364083
+    },
+    {
+      "id": "2022_09_30_20_04_34",
+      "type": "image",
+      "src": "assets/images/2022-09-30_20-04-34.jpeg",
+      "date": "2022-09-30",
+      "caption": "20 04 34",
+      "fileSize": 1682983
+    },
+    {
+      "id": "2022_09_30_20_35_15",
+      "type": "image",
+      "src": "assets/images/2022-09-30_20-35-15.jpeg",
+      "date": "2022-09-30",
+      "caption": "20 35 15",
+      "fileSize": 1628535
+    },
+    {
+      "id": "2022_09_30_20_43_56",
+      "type": "image",
+      "src": "assets/images/2022-09-30_20-43-56.jpeg",
+      "date": "2022-09-30",
+      "caption": "20 43 56",
+      "fileSize": 1557179
+    },
+    {
+      "id": "2022_10_01_19_29_12",
+      "type": "image",
+      "src": "assets/images/2022-10-01_19-29-12.jpeg",
+      "date": "2022-10-01",
+      "caption": "19 29 12",
+      "fileSize": 849212
+    },
+    {
+      "id": "2022_10_01_19_29_46",
+      "type": "image",
+      "src": "assets/images/2022-10-01_19-29-46.jpeg",
+      "date": "2022-10-01",
+      "caption": "19 29 46",
+      "fileSize": 1291110
+    },
+    {
+      "id": "2022_10_12_15_36_15",
+      "type": "image",
+      "src": "assets/images/2022-10-12_15-36-15.jpeg",
+      "date": "2022-10-12",
+      "caption": "15 36 15",
+      "fileSize": 1353239
+    },
+    {
+      "id": "2022_10_14_22_59_55",
+      "type": "image",
+      "src": "assets/images/2022-10-14_22-59-55.jpeg",
+      "date": "2022-10-14",
+      "caption": "22 59 55",
+      "fileSize": 760431
+    },
+    {
+      "id": "2022_10_14_22_59_57",
+      "type": "image",
+      "src": "assets/images/2022-10-14_22-59-57.jpeg",
+      "date": "2022-10-14",
+      "caption": "22 59 57",
+      "fileSize": 946106
+    },
+    {
+      "id": "2022_10_14_23_00_26",
+      "type": "image",
+      "src": "assets/images/2022-10-14_23-00-26.jpeg",
+      "date": "2022-10-14",
+      "caption": "23 00 26",
+      "fileSize": 1283497
+    },
+    {
+      "id": "2022_10_14_23_00_27",
+      "type": "image",
+      "src": "assets/images/2022-10-14_23-00-27.jpeg",
+      "date": "2022-10-14",
+      "caption": "23 00 27",
+      "fileSize": 1228800
+    },
+    {
+      "id": "2022_10_15_16_07_42",
+      "type": "image",
+      "src": "assets/images/2022-10-15_16-07-42.jpeg",
+      "date": "2022-10-15",
+      "caption": "16 07 42",
+      "fileSize": 1528411
+    },
+    {
+      "id": "2022_10_15_20_34_33",
+      "type": "image",
+      "src": "assets/images/2022-10-15_20-34-33.jpeg",
+      "date": "2022-10-15",
+      "caption": "20 34 33",
+      "fileSize": 1792165
+    },
+    {
+      "id": "2022_10_15_20_34_36",
+      "type": "image",
+      "src": "assets/images/2022-10-15_20-34-36.jpeg",
+      "date": "2022-10-15",
+      "caption": "20 34 36",
+      "fileSize": 1740588
+    },
+    {
+      "id": "2022_10_15_20_34_43",
+      "type": "image",
+      "src": "assets/images/2022-10-15_20-34-43.jpeg",
+      "date": "2022-10-15",
+      "caption": "20 34 43",
+      "fileSize": 1765164
+    },
+    {
+      "id": "fall_2025_poem",
+      "type": "poem",
+      "title": "Autumn's Journey",
+      "text": "Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit sed quia non numquam eius modi tempora incidunt.",
+      "date": "2025-09-01"
+    },
+    {
+      "id": "2025_09_09_18_15_49_PNG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_18-15-49.PNG",
+      "date": "2025-09-09",
+      "caption": "18 15 49.PNG",
+      "fileSize": 2856258
+    },
+    {
+      "id": "2025_09_09_19_49_12_1",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-1.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 1",
+      "fileSize": 415637
+    },
+    {
+      "id": "2025_09_09_19_49_12_2",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-2.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 2",
+      "fileSize": 90819
+    },
+    {
+      "id": "2025_09_09_19_49_12_3",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-3.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 3",
+      "fileSize": 419844
+    },
+    {
+      "id": "2025_09_09_19_49_12_4",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-4.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 4",
+      "fileSize": 121697
+    },
+    {
+      "id": "2025_09_09_19_49_12_5",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-5.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 5",
+      "fileSize": 134216
+    },
+    {
+      "id": "2025_09_09_19_49_12_6",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-6.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 6",
+      "fileSize": 74812
+    },
+    {
+      "id": "2025_09_09_19_49_12_7",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-7.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 7",
+      "fileSize": 82166
+    },
+    {
+      "id": "2025_09_09_19_49_12_8",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12-8.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12 8",
+      "fileSize": 338228
+    },
+    {
+      "id": "2025_09_09_19_49_12",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-12.jpg",
+      "date": "2025-09-09",
+      "caption": "19 49 12",
+      "fileSize": 86403
+    },
+    {
+      "id": "2025_09_09_19_49_33_1_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-1.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 1.JPG",
+      "fileSize": 124132
+    },
+    {
+      "id": "2025_09_09_19_49_33_2_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-2.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 2.JPG",
+      "fileSize": 323436
+    },
+    {
+      "id": "2025_09_09_19_49_33_3_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-3.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 3.JPG",
+      "fileSize": 393048
+    },
+    {
+      "id": "2025_09_09_19_49_33_4_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-4.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 4.JPG",
+      "fileSize": 125557
+    },
+    {
+      "id": "2025_09_09_19_49_33_5_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-5.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 5.JPG",
+      "fileSize": 150782
+    },
+    {
+      "id": "2025_09_09_19_49_33_6_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-6.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 6.JPG",
+      "fileSize": 14015
+    },
+    {
+      "id": "2025_09_09_19_49_33_7_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33-7.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33 7.JPG",
+      "fileSize": 235006
+    },
+    {
+      "id": "2025_09_09_19_49_33_JPG",
+      "type": "image",
+      "src": "assets/images/2025-09-09_19-49-33.JPG",
+      "date": "2025-09-09",
+      "caption": "19 49 33.JPG",
+      "fileSize": 103688
     }
   ]
 }
