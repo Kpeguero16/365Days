@@ -23,6 +23,7 @@
           const poster = t.getAttribute('data-poster');
           if (poster) t.setAttribute('poster', poster);
           if (t.tagName === 'VIDEO') {
+            t.muted = true; // Ensure video is muted before playing
             t.load();
             t.play().catch(()=>{});
           }
