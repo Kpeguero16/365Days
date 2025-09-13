@@ -22,8 +22,10 @@ function scanDirectory(dir, relativePath = '') {
       const ext = path.extname(entry.name).toLowerCase();
       const baseName = path.basename(entry.name, ext);
       
-      // Skip audio files - they're not content items
-      if (['.mp3', '.wav', '.ogg', '.m4a'].includes(ext)) {
+      // Skip system files and audio files
+      if (entry.name.startsWith('.') || 
+          ['Thumbs.db', 'desktop.ini'].includes(entry.name) ||
+          ['.mp3', '.wav', '.ogg', '.m4a'].includes(ext)) {
         continue; // Skip this file
       }
       
