@@ -220,7 +220,13 @@
   }
 
   // Render the app immediately
-  render().catch(err => {
+  render().then(() => {
+    // Setup media lazy loading after content is rendered
+    window.MediaAPI.setupReveals();
+    window.MediaAPI.lazyLoadMedia();
+    setupScrollSpy();
+    setupSidebarNavigation();
+  }).catch(err => {
     console.error('Render failed:', err);
     contentEl.innerHTML = '<div style="padding: 48px; text-align: center;"><h2>Welcome to our journey</h2><p>Content is loading...</p></div>';
   });
