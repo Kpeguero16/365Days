@@ -45,4 +45,4 @@ Tasks are sequential because they share the generator and its tests. No parallel
 
 Run `node --test tests/generate-manifest.test.js`, syntax checks for generator/tests, and `git diff --check`. Exercise success and failure through the actual CLI in fixtures. Confirm repeated output is byte-identical and failure output preserves the previous bytes. Record real-manifest hashes before/after and confirm no `assets/` diff. No real manifest regeneration, browser work, deployment, or dependency installation is part of this plan.
 
-All of these were run. `node --test tests/generate-manifest.test.js` reports 34 passing tests. A dry run against the real collection reproduced `content.json` byte-for-byte, and a hand-edited caption and trip survived a real regeneration.
+All of these were run. `node --test tests/generate-manifest.test.js` passes. A dry run against the real collection reproduced `content.json` byte-for-byte, and a hand-edited caption and trip survived a real regeneration.
