@@ -1,6 +1,6 @@
 # R02 implementation checklist
 
-Status: complete, 2026-09-09 (working tree). All slices implemented; every acceptance criterion measured except two that need real media playback, recorded below and handed to R18. Follow [the specification](../SPEC-r02.md) and [plan](plan-r02.md). Unchecked boxes describe work not yet started.
+Status: complete, 2026-09-09; reopened and re-closed after an independent review of PR #2 found a blank-screen defect (T5 below). All slices implemented; every acceptance criterion measured except two that need real media playback, recorded below and handed to R18. Follow [the specification](../SPEC-r02.md) and [plan](plan-r02.md). Unchecked boxes describe work not yet started.
 
 Measurements are read from the live page inside a same-origin iframe served by `python3 -m http.server`. Chrome would not accept a window resize below the 1470px screen width, and an iframe is a separate browsing context with its own viewport, so media queries evaluate against its width exactly as they would in a resized window.
 
@@ -93,3 +93,16 @@ An earlier reading of these same symptoms was briefly written up as a navigation
 - [x] `git diff --check` clean; the diff touches `styles/layout.css` and the R02 documents only.
 - [x] Review the change for scope: no JavaScript, HTML, generator or content edits. `content.json` hashes `aa49f47e6a6c8ec8` in both the working tree and `HEAD`; `git diff -- assets content.json` is empty.
 - [x] Mark R02 complete in `OPEN_ITEMS.md` with the measurements, and record what R02 does not fix — transfer size (R08), nav ordering and duplicate observers (R06/R07), reduced motion (R14), deployed behavior and real media playback (R18).
+
+## T5 — Fixes from the PR #2 review
+
+Added after an independent code review. Findings were reproduced before acting on them, not taken on trust.
+
+- [x] **Critical: the largest season rendered blank on phones.** `setupReveals()` in `scripts/media.js` observed `.section` at `threshold: 0.1`; `isIntersecting` follows the threshold index, so a section too tall to reach 10% of the viewport never reports as intersecting and never gains `.in`, leaving `effects.css`'s `opacity: 0` in force. Two phone columns put `#summer-2024` at 130 cards and 6930px in a 552px scroller — maximum ratio 0.079, blank at every scroll position, 130 of 546 items invisible. Fixed with `threshold: 0`.
+- [x] **Focus ring clipped on the chips.** `.timeline` had `overflow-y: hidden`, `clientHeight` 44 and 44px chips: 0px of vertical slack, so the keyboard focus ring was clipped top and bottom. Fixed with `padding: 4px 0`, giving 8px of slack. Dropping `overflow-y: hidden` would not have worked — when one overflow axis is not `visible` the other computes to `auto` and clips identically.
+- [x] **Scrollbar hidden on non-touch narrow windows.** The 900px block also covers narrow desktop windows, where a wheel does not scroll horizontally and the scrollbar was the only route to later seasons. `(pointer: coarse)` measured false in that context. Scrollbar hiding is now gated behind that query.
+- [x] Accuracy fixes the review surfaced: the strip is a grid row, not sticky, and the comment said otherwise; `display: inline-flex` on a flex item is blockified, so it reads `flex`; the SPEC's breakpoint arithmetic implied 936px, not 900, and now says so along with the 901–936px consequence; the `OPEN_ITEMS.md` entry said "working tree" for committed work.
+
+**Verification.** `#summer-2024` at 375x667: 130 cards, 6930px, maximum ratio 0.0791 — still far below 0.1 — now `.in` with `opacity: 1` and rendering. Paired IntersectionObserver probes on that element at the same instant gave `threshold: 0` true at ratio 0.0733 and `threshold: 0.1` false at the same ratio, which is the mechanism. `winter-2024`, ratio 0.32, revealed both before and after, which rules out the hidden-tab artifact. Desktop at 1280 renders `#summer-2024` normally, so the threshold change regresses nothing. Full sweep re-run at 320, 375, 390, 520, 700, 900, 901 and 1280: overflow 0/0/0 everywhere, chips 44px with 8px slack below 900 and 37px above, music button 44px/46px, padding and column counts unchanged, snap `none`/`y mandatory`, strip still scrollable, `scrollbar-width` back to `auto` on desktop.
+
+**Scope note.** R02 was scoped CSS-only. The threshold fix is one option on one observer in `scripts/media.js` — the only JavaScript in the change. The CSS-only alternative (exempting `.section` from the fade below 900px) was rejected because it would leave the same trap above 900px, where three tracks are already down to 165px at 901.

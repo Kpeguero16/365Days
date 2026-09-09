@@ -1,6 +1,6 @@
 # R02: Make the layout usable on phones
 
-Status: implemented and verified, 2026-09-09. `styles/layout.css` satisfies every acceptance criterion except video decoding and audible music, which the verification environment could not exercise; both are handed to R18.
+Status: implemented and verified, 2026-09-09; revised after an independent review found a blank-screen defect. Satisfies every acceptance criterion except video decoding and audible music, which the verification environment could not exercise; both are handed to R18.
 Tracker: [R02](OPEN_ITEMS.md). Plan: [tasks/plan-r02.md](tasks/plan-r02.md). Checklist: [tasks/todo-r02.md](tasks/todo-r02.md).
 R01's plan and checklist keep their original names (`tasks/plan.md`, `tasks/todo.md`); per-item files are suffixed from R02 onward.
 
@@ -25,7 +25,7 @@ The site renders and navigates correctly on a phone. Today it does not: `styles/
 
 Below the stacking breakpoint, `.app` becomes a single-column grid of two rows. The sidebar is the first row: brand on the left, music button on the right, and the season list beneath them as a horizontally scrolling row of chips. `#content` is the second row and keeps its own scrollbar.
 
-This is a CSS-only change. `app.html` and every file under `scripts/` are untouched, so R02 cannot collide with R06 (trip rendering and nav order), R07 (duplicate observer setup) or R13 (brand keyboard access), which all remain open and all touch that JavaScript.
+This was scoped as a CSS-only change. One JavaScript line proved unavoidable — see "The reveal threshold" below. `app.html` is untouched and the only edit under `scripts/` is a single observer option, so R02 still does not collide with R06 (trip rendering and nav order), R07 (duplicate observer setup) or R13 (brand keyboard access), which all remain open.
 
 `#content` stays the scrolling container, as `AGENTS.md` requires — the scroll-spy `IntersectionObserver` uses it as its root.
 
@@ -37,7 +37,9 @@ This is a CSS-only change. `app.html` and every file under `scripts/` are untouc
 | `max-width: 900px` | Stacked top strip; section padding 24px; `repeat(auto-fill, minmax(200px, 1fr))` columns; snap off. |
 | `max-width: 520px` | Section padding 20px/16px; two columns; smaller card meta. |
 
-Resulting column counts: two at 375px, three at 700px, four at 900px, three above 900px. The strip switch happens at 900px because the desktop three-column grid needs roughly 560px of content column, which a 280px sidebar plus 96px padding does not leave below that width.
+Resulting column counts: two at 375px, three at 700px, four at 900px, three above 900px.
+
+The strip switch happens at 900px because the desktop three-column grid wants roughly 560px of content column, and a 280px sidebar plus 96px of section padding means that needs a 936px window. 900 is the conventional breakpoint just below it. The consequence, accepted rather than solved: between 901 and 936px the desktop layout is cramped, with three tracks of about 165px, under the 200px floor the mobile block itself uses.
 
 ### Snap is off below 900px
 
@@ -49,9 +51,28 @@ Resulting column counts: two at 375px, three at 700px, four at 900px, three abov
 
 `.app` gets `height: 100vh` then `height: 100dvh`, and `min-height: 0` to cancel the desktop `min-height: 100vh`. Without that cancellation `min-height: 100vh` wins whenever the large viewport exceeds the dynamic one, pushing the app taller than the screen and making the body scroll behind the browser chrome. `.content` becomes `height: 100%` and is sized by the `minmax(0, 1fr)` grid row.
 
+### The reveal threshold
+
+`setupReveals()` in `scripts/media.js` observes `.section` at `threshold: 0.1`, and `styles/effects.css` holds every section at `opacity: 0` until the observer adds `.in`. `isIntersecting` is derived from the threshold index, so an element too tall to ever occupy 10% of the viewport never reports as intersecting and never reveals.
+
+Two phone columns make the largest season, Summer 2024 at 130 cards, about 6930px tall in a 552px scroller. Its maximum achievable ratio is 0.079, so it stayed blank at every scroll position — 130 of 546 items invisible. Three columns would have put it at roughly 0.117 and hidden the problem, which is why this only surfaced once the phone grid landed.
+
+The fix is `threshold: 0` in `setupReveals()`. This is the one place R02 leaves CSS. A CSS-only alternative existed — exempting `.section` from the fade below 900px — but it would have left the same trap above 900px, where the margin is thinner than it looks: at 901px the three tracks are already down to 165px.
+
+Paired probes on the same element at the same instant, which is the evidence for the mechanism:
+
+| `threshold` | `isIntersecting` | `intersectionRatio` |
+| --- | --- | --- |
+| `0` | true | 0.0733 |
+| `0.1` | false | 0.0733 |
+
 ### Touch targets
 
-Timeline chips become `inline-flex` with `min-height: 44px`. At the current `padding: 8px 12px` and 14px type they are about 34px tall, below the 44px minimum. The music button keeps its own padding but drops `width: 100%`.
+Timeline chips become flex containers with `min-height: 44px`. At the current `padding: 8px 12px` and 14px type they are about 34px tall, below the 44px minimum. The music button drops `width: 100%` and takes the same 44px floor.
+
+`.timeline` carries `padding: 4px 0` so the keyboard focus ring is not clipped by the scrollport. Removing `overflow-y: hidden` would not achieve this: when one overflow axis is not `visible`, the other computes to `auto`, which clips just the same.
+
+The strip's scrollbar is hidden only under `(pointer: coarse)`. The 900px block also covers narrow desktop windows, where a wheel does not scroll horizontally and the scrollbar is the only way to reach later seasons.
 
 Trip chips lose `margin-left: 16px`, which reads as nothing in a horizontal row. They stay smaller and muted, and they sit immediately after their season chip, which is what conveys the relationship.
 

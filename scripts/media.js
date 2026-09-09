@@ -7,7 +7,11 @@
           io.unobserve(e.target);
         }
       }
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    // threshold 0, not 0.1: `isIntersecting` is derived from the threshold
+    // index, so an element too tall to ever reach 10% of the viewport never
+    // reports as intersecting and never reveals. A 130-card season is about
+    // 6900px in a 552px phone scroller, a maximum ratio of 0.08.
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
     root.querySelectorAll('.reveal, .section').forEach(el => io.observe(el));
   }
   function lazyLoadMedia(root=document) {
