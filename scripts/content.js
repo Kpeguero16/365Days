@@ -10,19 +10,37 @@
       return { items: [] };
     }
   }
+  const DEFAULT_DATE = '2021-09-11';
+  const DATE_SHAPE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+  // A winter spans two calendar years, so its label carries both: December opens
+  // the winter named for the year it starts, and the following January and
+  // February close it. `\u2013` is an en dash, escaped so the label cannot depend
+  // on how a server labels this file's charset.
+  function winterLabel(startYear) {
+    return `Winter ${startYear}\u2013${String(startYear + 1).slice(2)}`;
+  }
+
+  // Read the calendar components straight out of the string. Constructing a Date
+  // here would reintroduce a timezone: local-midnight parsing read back through
+  // UTC getters put every first-of-month date in the previous season east of UTC.
   function getSeason(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
-    const m = d.getUTCMonth() + 1; // 1-12
-    const y = d.getUTCFullYear();
-    if ([12,1,2].includes(m)) return `Winter ${m===12?y:y}`;
-    if ([3,4,5].includes(m)) return `Spring ${y}`;
-    if ([6,7,8].includes(m)) return `Summer ${y}`;
+    let parts = DATE_SHAPE.exec(dateStr);
+    if (!parts || Number(parts[2]) < 1 || Number(parts[2]) > 12) {
+      parts = DATE_SHAPE.exec(DEFAULT_DATE);
+    }
+    const y = Number(parts[1]);
+    const m = Number(parts[2]);
+    if (m === 12) return winterLabel(y);
+    if (m <= 2) return winterLabel(y - 1);
+    if (m <= 5) return `Spring ${y}`;
+    if (m <= 8) return `Summer ${y}`;
     return `Fall ${y}`;
   }
   function groupBySeason(items) {
     const map = new Map();
     for (const it of items) {
-      const key = getSeason(it.date || '2021-09-11');
+      const key = getSeason(it.date || DEFAULT_DATE);
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(it);
     }

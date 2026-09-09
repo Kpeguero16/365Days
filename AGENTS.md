@@ -5,7 +5,7 @@
 - Static anniversary site for GitHub Pages: plain HTML, CSS, and JavaScript; no framework, bundler, package manifest, or backend. Keep URLs relative for project-subpath hosting; preserve `.nojekyll`.
 - `index.html` and `scripts/gate.js` implement the date gate. `app.html` is the timeline shell; `scripts/app.js` renders cards, sections, navigation, and scroll spy.
 - Browser scripts use IIFEs, two-space indentation, semicolons, and mostly single quotes. Shared helpers are exposed as `window.ContentAPI` and `window.MediaAPI`, not ES modules. Preserve deferred script order in `app.html`: content, media, music, app, easter.
-- `scripts/content.js` fetches `content.json` and groups items by season/year and optional trip, oldest first. `scripts/media.js` handles IntersectionObserver reveals and lazy loading; music and easter eggs have separate scripts.
+- `scripts/content.js` fetches `content.json` and groups items by season/year and optional trip, oldest first. A winter spans two calendar years and is labelled with both, `Winter 2021–22`: December opens the winter, the following January and February close it. Season assignment reads the `YYYY-MM-DD` string directly and builds no `Date`, so it cannot vary by timezone — keep it that way. `scripts/media.js` handles IntersectionObserver reveals and lazy loading; music and easter eggs have separate scripts.
 - CSS loads as `styles/base.css` (theme variables and gate), `styles/layout.css` (sidebar, timeline, cards), then `styles/effects.css` (reveals and transitions). Reuse the `:root` color/shadow variables.
 - Follow `renderItem()` for cards: content text uses `textContent` or `escapeHtml`; media starts with `data-src`/`data-poster`. Poems render before media and span the grid. Videos are muted, looping, inline, and lazily loaded; music starts on a button click.
 
@@ -28,7 +28,9 @@ Run from the repository root:
 - JSON parse check: `node -e 'JSON.parse(require("fs").readFileSync("content.json", "utf8"))'`
 - Whitespace check: `git diff --check`.
 - Generator tests: `node --test tests/generate-manifest.test.js`. They run against temporary fixtures only and never read or write the real `content.json` or `assets/`.
-- No lint configuration, build step, or type checker is configured, and nothing outside `tools/generate-manifest.js` has tests. Syntax/JSON checks do not replace browser verification.
+- Content tests: `node --test tests/content.test.js`. Season and date boundaries, including timezone independence. `scripts/content.js` is a browser IIFE, so the tests load it with `node:vm` against a stub `window` and drive the public `groupBySeason`; the source needs no test-only export. Timezone cases run one child process per zone because `TZ` must be set before the first `Date` use.
+- Both suites: `node --test tests/*.test.js` (40 tests). Pass the files, not the directory — `node --test tests` treats the argument as a module path and fails with `MODULE_NOT_FOUND` on Node 24.
+- No lint configuration, build step, or type checker is configured. `tools/generate-manifest.js` and `scripts/content.js` have tests; `scripts/app.js`, `media.js`, `music.js`, `gate.js` and `easter.js` do not. Syntax/JSON checks do not replace browser verification.
 - Dry-run the generator without writing: `node -e 'const {buildManifest}=require("./tools/generate-manifest.js");const r=buildManifest("assets","content.json");console.log(r.manifest.items.length, r.report.skipped, r.report.warnings)'`. `buildManifest()` is pure; only `generateManifest()` writes.
 - For behavior changes, check empty/wrong/correct date entry and redirects, timeline scrolling, image/video loading, music toggle, and affected easter eggs. Inspect console/network errors and test narrow screens and Safari where available.
 
