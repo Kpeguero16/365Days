@@ -23,8 +23,17 @@ A romantic, elegant website created as an anniversary gift featuring photos, poe
 
 1. Add images to `assets/images/` (supports trips in subfolders)
 2. Add videos to `assets/videos/`
-3. Add poems/letters by editing `content.json`
-4. Run `node tools/generate-manifest.js` to auto-generate from assets
+3. Add poems/letters, or write a real caption for a photo, by editing `content.json`
+4. Run `node tools/generate-manifest.js` to pick up new assets
+
+The generator merges rather than overwrites: captions, dates, trips, poems and any
+other field you edited are preserved, while `src`, `type` and `fileSize` are refreshed
+from disk. Move a photo into `assets/images/<Trip name>/` and its entry follows the
+file and gains the trip. Rename it to something different and the old entry is
+dropped and the file comes back as new. Delete a photo and its entry is dropped
+and reported. A run
+never asks you to hand-edit `content.json` to make it succeed, and a failed run leaves
+the previous file byte-for-byte intact.
 
 ## Deployment
 
