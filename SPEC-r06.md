@@ -1,6 +1,6 @@
 # R06/R07/R11: One render lifecycle, correct order, working scroll spy
 
-Status: implemented, 2026-09-09. Branch `r06-render-lifecycle`, cut from `main`.
+Status: implemented and verified, 2026-09-09. Branch `r06-render-lifecycle`, rebased onto `main` after R02 and R03 merged and re-verified against that merged state: 17 sections with the R02 stylesheet and the R02 reveal threshold in place, 1 click listener, 2 IntersectionObservers (reveals and loading; the spy no longer creates one), navigation order equal to DOM order, 0 console errors.
 Tracker: [R06, R07, R11](OPEN_ITEMS.md). Plan: [tasks/plan-r06.md](tasks/plan-r06.md). Checklist: [tasks/todo-r06.md](tasks/todo-r06.md).
 
 ## Objective
@@ -129,7 +129,7 @@ The trip fixture is a scratchpad `content.json` served locally. It is never writ
 
 ### Follow-up this creates
 
-`.trip-section` needs `scroll-snap-align` and a minimum height once trips exist. T4 measured this rather than predicting it: `#content` carries `scroll-snap-type: y mandatory`, `.section` has `scroll-snap-align: start` at `min-height: 800px`, and a fixture trip is 306px with `scroll-snap-align: none`. A trip between two full-height snap targets is not a resting scroll position, so navigating to one lands on the next season. With snap disabled every trip chip activates correctly, so the spy is right and the stylesheet is the blocker. This lands after PR #2 merges. It is not urgent: content has zero trips.
+`.trip-section` needs `scroll-snap-align` and a minimum height once trips exist. T4 measured this rather than predicting it: `#content` carries `scroll-snap-type: y mandatory`, `.section` has `scroll-snap-align: start` at `min-height: 800px`, and a fixture trip is 306px with `scroll-snap-align: none`. A trip between two full-height snap targets is not a resting scroll position, so navigating to one lands on the next season. With snap disabled every trip chip activates correctly, so the spy is right and the stylesheet is the blocker. R02 has since merged, so `styles/layout.css` is free and nothing blocks this. It is not urgent: content has zero trips.
 
 A second follow-up: on the phone strip the active chip is not scrolled into view horizontally, so the highlight can sit off-screen. This could not arise before, because no chip activated at phone width. It needs a judgement call — scrolling the strip under the reader as they scroll content can feel jumpy — so it is recorded rather than guessed at.
 
