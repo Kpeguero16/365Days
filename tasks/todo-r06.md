@@ -1,6 +1,6 @@
 # R06/R07/R11 implementation checklist
 
-Status: T2 complete and Checkpoint A passed, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
+Status: T3 complete, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
 
 ## T1 — Measure the current behavior
 
@@ -32,9 +32,10 @@ Status: T2 complete and Checkpoint A passed, 2026-09-09. Follow [the specificati
 
 ## T3 — Order trips with their season (R06)
 
-- [ ] Append the season element before its trip elements, keeping trips as siblings inside `#content`.
-- [ ] Assert against the fixture that `#content` child order equals `#timeline` link order, element for element.
+- [x] Append the season element before its trip elements, keeping trips as siblings inside `#content`.
+- [x] Assert against the fixture that `#content` child order equals `#timeline` link order, element for element.
 - Acceptance: season → its trips → next season, matching navigation; real content (zero trips) renders identically to before.
+- **Result:** fixture orders now match element for element — `spring-2022, spring-2022-paris, spring-2022-rome, summer-2022, summer-2022-lisbon, fall-2022` in both, with classes `section, trip-section, trip-section, section, trip-section, section`. Real content unchanged: 18 sections, 0 trip sections, 546 cards, nav order equals DOM order, `fall-2021` first and `fall-2025` last, 3 observers, 1 listener, 0 errors. Trip chips still cannot activate — the spy observes only `.section` until T4.
 - Verify: browser against the fixture; compare the two orders programmatically rather than by eye. Confirm real content is unaffected.
 - Dependencies: T2.
 - Files: `scripts/app.js` (1 file).

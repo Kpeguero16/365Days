@@ -78,6 +78,12 @@
         grid.appendChild(renderItem(item));
       });
       
+      // The season goes in before its trips. Navigation lists the season link
+      // first and its trip links after it, so appending the trips first put
+      // every season's trips ahead of the season they belong to, immediately
+      // after the previous season's content.
+      contentEl.appendChild(secEl);
+
       // Add trip subsections
       if (sec.trips && sec.trips.length > 0) {
         sec.trips.forEach(trip => {
@@ -108,8 +114,6 @@
           contentEl.appendChild(tripEl);
         });
       }
-      
-      contentEl.appendChild(secEl);
     });
 
     setupScrollSpy();
