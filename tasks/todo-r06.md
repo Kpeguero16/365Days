@@ -1,6 +1,6 @@
 # R06/R07/R11 implementation checklist
 
-Status: T1 complete, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
+Status: T2 complete and Checkpoint A passed, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
 
 ## T1 — Measure the current behavior
 
@@ -16,18 +16,19 @@ Status: T1 complete, 2026-09-09. Follow [the specification](../SPEC-r06.md) and 
 
 ## T2 — Register once (R07)
 
-- [ ] Remove the duplicate setup block from the `render().then()` handler, leaving it responsible for the failure path only.
-- [ ] Re-run every T1 count.
+- [x] Remove the duplicate setup block from the `render().then()` handler, leaving it responsible for the failure path only.
+- [x] Re-run every T1 count.
 - Acceptance: one click listener, one scroll-spy mechanism, one reveal observer, one loading observer; exactly one `load()` and one `play()` attempt per video across a full page pass; one `scrollIntoView` and one snap-restore timer per chip click.
+- **Result:** listeners 2 -> 1, observers 6 -> 3 (spy 18 targets, reveals 564, loading 546 — one of each), `scrollIntoView` per click 2 -> 1, `load()`/`play()` 2/2 -> 1 per video across two videos. A/B at a fresh load with only `scripts/app.js` swapped: revealed cards 5 vs 5, images with `src` 7 vs 7, active chip `Fall 2021` vs `Fall 2021` — identical, so nothing but the duplication changed. An earlier A/B taken at a jumped scroll position disagreed (4/6 vs 3/9); that was layout noise from images resizing cards mid-measurement, not a regression.
 - Verify: browser counts before and after, at 1280px; page still renders, reveals, lazy-loads and navigates.
 - Dependencies: T1.
 - Files: `scripts/app.js` (1 file).
 
 ## Checkpoint A
 
-- [ ] All duplicate counts are exactly one.
-- [ ] Nothing else in page behavior changed: cards reveal, media loads, chips navigate.
-- [ ] No new console errors or warnings.
+- [x] All duplicate counts are exactly one.
+- [x] Nothing else in page behavior changed: cards reveal, media loads, chips navigate.
+- [x] No new console errors or warnings. Zero errors or exceptions captured across the T2 loads.
 
 ## T3 — Order trips with their season (R06)
 

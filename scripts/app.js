@@ -219,14 +219,12 @@
     return;
   }
 
-  // Render the app immediately
-  render().then(() => {
-    // Setup media lazy loading after content is rendered
-    window.MediaAPI.setupReveals();
-    window.MediaAPI.lazyLoadMedia();
-    setupScrollSpy();
-    setupSidebarNavigation();
-  }).catch(err => {
+  // Render the app immediately. Navigation, scroll spy, reveals and lazy
+  // loading are registered at the end of render(), where the DOM they observe
+  // has just been built; registering them here as well gave every chip two
+  // click handlers and every media element two loading observers, and the
+  // second observer re-ran load()/play() on videos the first had started.
+  render().catch(err => {
     console.error('Render failed:', err);
     contentEl.innerHTML = '<div style="padding: 48px; text-align: center;"><h2>Welcome to our journey</h2><p>Content is loading...</p></div>';
   });
