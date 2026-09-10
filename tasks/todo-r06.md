@@ -1,6 +1,6 @@
 # R06/R07/R11 implementation checklist
 
-Status: T4 complete, Checkpoint B partially met, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
+Status: complete, 2026-09-09. All slices implemented and verified. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
 
 ## T1 — Measure the current behavior
 
@@ -61,9 +61,9 @@ Status: T4 complete, Checkpoint B partially met, 2026-09-09. Follow [the specifi
 
 ## T5 — Document and close
 
-- [ ] Record fix and verification evidence for R06, R07 and R11 in `OPEN_ITEMS.md`, including what was not verified.
-- [ ] Note the `.trip-section` snapping follow-up, to land in `styles/layout.css` after PR #2 merges.
-- [ ] Remove the scratchpad fixture and stop the local server.
+- [x] Record fix and verification evidence for R06, R07 and R11 in `OPEN_ITEMS.md`, including what was not verified.
+- [x] Note the `.trip-section` snapping follow-up, to land in `styles/layout.css` after PR #2 merges. Also recorded a second stylesheet follow-up T4 exposed: the active chip is not scrolled into view on the phone strip.
+- [x] Remove the scratchpad fixture and stop the local server.
 - Acceptance: the tracker states what changed, what was measured, and what remains.
 - Verify: read the tracker entries against the recorded measurements.
 - Dependencies: Checkpoint B.
