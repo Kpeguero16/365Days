@@ -158,33 +158,58 @@
 
   function cssId(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
 
+  // Scroll spy. This reads scroll position rather than observing
+  // intersections. `intersectionRatio` divides by *target* area, so a short
+  // section sitting inside the viewport outscores a tall one filling it —
+  // measured mid-page in real content, a 1450px section holding 238px of the
+  // activation band beat a 2476px section holding 279px. A section taller
+  // than the band divided by the smallest threshold also never reports as
+  // intersecting at all, because `isIntersecting` follows the threshold
+  // index. Seasons here run from one screen to ten screens tall, so both
+  // cases are ordinary rather than edge cases. Comparing positions is
+  // independent of how tall a target is.
   function setupScrollSpy() {
     const links = Array.from(timelineEl.querySelectorAll('a'));
     const map = new Map(links.map(a => [a.getAttribute('href')?.slice(1), a]));
-    
-    const io = new IntersectionObserver(entries => {
-      // Find the section that's most visible
-      let mostVisible = null;
-      let maxRatio = 0;
-      
-      for (const e of entries) {
-        if (e.isIntersecting && e.intersectionRatio > maxRatio) {
-          maxRatio = e.intersectionRatio;
-          mostVisible = e.target;
-        }
+    // Seasons and trips together, in document order, so a trip chip can go
+    // active too. Trips were previously left out of this entirely.
+    const targets = Array.from(contentEl.querySelectorAll('.section, .trip-section'));
+    if (!targets.length) return;
+
+    function activeTarget() {
+      // At the end of the scroller a short final target may never reach the
+      // line, and it is what the reader is looking at regardless.
+      if (contentEl.scrollTop + contentEl.clientHeight >= contentEl.scrollHeight - 2) {
+        return targets[targets.length - 1];
       }
-      
-      if (mostVisible) {
-        const id = mostVisible.id;
-        links.forEach(a => a.classList.toggle('active', a === map.get(id)));
+      // Positions are read each time rather than cached at render: media
+      // loads lazily and changes section heights as it arrives.
+      const contentTop = contentEl.getBoundingClientRect().top;
+      // The activation line sits a quarter of the way down the scrollport, so
+      // a section becomes current once it has properly arrived rather than
+      // when its first pixel appears.
+      const line = contentEl.clientHeight * 0.25;
+      let current = targets[0];
+      for (const el of targets) {
+        if (el.getBoundingClientRect().top - contentTop > line) break;
+        current = el;
       }
-    }, { 
-      root: contentEl, 
-      threshold: [0.1, 0.3, 0.5, 0.7, 0.9],
-      rootMargin: '-10% 0px -10% 0px'
-    });
-    
-    document.querySelectorAll('.section').forEach(sec => io.observe(sec));
+      return current;
+    }
+
+    function update() {
+      const active = map.get(activeTarget().id);
+      links.forEach(a => a.classList.toggle('active', a === active));
+    }
+
+    let queued = false;
+    contentEl.addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; update(); });
+    }, { passive: true });
+
+    update();
   }
 
   function setupSidebarNavigation() {

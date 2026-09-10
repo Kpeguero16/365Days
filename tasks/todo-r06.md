@@ -1,6 +1,6 @@
 # R06/R07/R11 implementation checklist
 
-Status: T3 complete, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
+Status: T4 complete, Checkpoint B partially met, 2026-09-09. Follow [the specification](../SPEC-r06.md) and [plan](plan-r06.md). All boxes describe future implementation work.
 
 ## T1 — Measure the current behavior
 
@@ -42,20 +42,22 @@ Status: T3 complete, 2026-09-09. Follow [the specification](../SPEC-r06.md) and 
 
 ## T4 — Replace the scroll spy (R11, R06)
 
-- [ ] Replace the IntersectionObserver with a `requestAnimationFrame`-throttled `passive` scroll handler on `#content`.
-- [ ] Collect seasons and trips in document order once per render; activate the last target whose top has passed the activation line at 25% of the scrollport.
-- [ ] Force the last target active at the end of the scroller; run the computation once after render for the initial state.
+- [x] Replace the IntersectionObserver with a `requestAnimationFrame`-throttled `passive` scroll handler on `#content`.
+- [x] Collect seasons and trips in document order once per render; activate the last target whose top has passed the activation line at 25% of the scrollport.
+- [x] Force the last target active at the end of the scroller; run the computation once after render for the initial state.
 - Acceptance: spec criteria 5, 6 and 7 — chips activate correctly scrolling both directions at 1280px and 375px through many-screen-tall sections, trip chips activate, the bottom activates the last chip, and the pre-scroll state matches the first section.
+- **Result:** 13 scroll stops at 1280px against real content, forward then backward, zero mismatches. At 375px with PR #2's stylesheet, `summer-2024` (6259px, the section that could never activate under the old threshold) is active and straddles the activation line; so does `winter-2024`; the bottom of the scroller activates `fall-2025`. Verified with an independent check that asks whether the active chip's section actually spans the line, rather than re-running the spy's own arithmetic.
+- **Criterion 5 is met for season chips and for trip chips only when snap is off.** `#content` carries `scroll-snap-type: y mandatory`, `.section` has `scroll-snap-align: start` with `min-height: 800px`, and `.trip-section` has `scroll-snap-align: none` at 306px tall — so a trip between two full-height snap targets is not a resting scroll position and the scroller lands on the next season instead. With snap disabled, all three fixture trip chips activate correctly. This is the `styles/layout.css` follow-up the spec already recorded, now measured rather than predicted; it is not a regression, since trips could not activate at all before.
 - Verify: browser at both widths against real content and the fixture, scrolling forward and backward, plus the top and bottom extremes.
 - Dependencies: T3.
 - Files: `scripts/app.js` (1 file).
 
 ## Checkpoint B
 
-- [ ] Every acceptance criterion in the spec passes with recorded evidence.
-- [ ] `node --test tests/*.test.js` passes; `node --check scripts/app.js` passes; `git diff --check` is clean.
-- [ ] Real `content.json` hash and `assets/` are unchanged.
-- [ ] Review the diff for scope: `scripts/app.js` only.
+- [x] Criteria 1-4, 6, 7 and 8 pass with recorded evidence. Criterion 5 passes for season chips; trip chips need the `.trip-section` snap follow-up in `styles/layout.css`, which PR #2 owns.
+- [x] `node --test tests/*.test.js` passes (34/34); `node --check scripts/app.js` passes; `git diff --check` is clean.
+- [x] Real `content.json` hash `aa49f47e6a6c8ec8` unchanged; `assets/` untouched.
+- [x] Review the diff for scope: `scripts/app.js` only.
 
 ## T5 — Document and close
 
