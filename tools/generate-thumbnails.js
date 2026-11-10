@@ -92,8 +92,21 @@ async function generateThumbnails({
   measure = measureWithMagick,
   limit = os.availableParallelism ? os.availableParallelism() : os.cpus().length,
 } = {}) {
+  // Without the encoder every size read fails, and every image would lose its
+  // copies in one run. Stop before anything is touched instead.
+  if (encode === encodeWithMagick || measure === measureWithMagick) {
+    try {
+      await magick(['-version']);
+    } catch (error) {
+      throw new Error('ImageMagick 7 (`magick`) is not on PATH; nothing was changed');
+    }
+  }
+
+  if (!fs.existsSync(manifestFile)) {
+    throw new Error(`${manifestFile} does not exist; run tools/generate-manifest.js first`);
+  }
+  const startText = fs.readFileSync(manifestFile, 'utf8');
   const manifest = readExistingManifest(manifestFile);
-  if (!manifest) throw new Error(`${manifestFile} does not exist; run tools/generate-manifest.js first`);
   const before = JSON.stringify(manifest, null, 2);
   const report = { made: 0, kept: 0, failed: [], unused: [] };
 
@@ -102,12 +115,14 @@ async function generateThumbnails({
   for (const item of manifest.items) {
     if (item.type !== 'image') continue;
     const stem = thumbStem(item.src);
-    THUMB_FIELDS.forEach(field => delete item[field]);
-    if (stems.has(stem)) {
-      report.failed.push(`${item.src}: another image in the same folder has the same name, so it keeps its original`);
+    // Case-insensitive: on macOS and Windows IMG_1.JPG and img_1.png would
+    // write the same files, and GitHub Pages would then serve only one.
+    if (stems.has(stem.toLowerCase())) {
+      THUMB_FIELDS.forEach(field => delete item[field]);
+      report.failed.push(`${item.src}: another image in this folder has the same name apart from extension or case; it shows its original`);
       continue;
     }
-    stems.add(stem);
+    stems.add(stem.toLowerCase());
     jobs.push({ item, stem, outputs: WIDTHS.map(w => path.join(root, `${stem}-${w}.webp`)) });
   }
 
@@ -122,7 +137,14 @@ async function generateThumbnails({
       const { width, height } = await measure(outputs[outputs.length - 1]);
       Object.assign(item, { thumb: stem, width, height });
     } catch (error) {
-      report.failed.push(`${item.src}: ${error.message}`);
+      // Copies already recorded for this path, and still on disk, still match
+      // their recorded size, so keep showing them.
+      if (item.thumb === stem && outputs.every(file => fs.existsSync(file))) {
+        report.failed.push(`${item.src}: ${error.message} (its existing copies stay in use)`);
+      } else {
+        THUMB_FIELDS.forEach(field => delete item[field]);
+        report.failed.push(`${item.src}: ${error.message} (it shows its original)`);
+      }
     }
   });
 
@@ -132,6 +154,11 @@ async function generateThumbnails({
     .filter(file => !expected.has(file));
 
   const after = JSON.stringify(manifest, null, 2);
+  // A caption edited, or the manifest regenerated, while this ran would be
+  // overwritten. Finished copies are kept, so running again is quick.
+  if (fs.readFileSync(manifestFile, 'utf8') !== startText) {
+    throw new Error(`${manifestFile} changed while this ran, so it was not written; run again`);
+  }
   if (after !== before) writeManifestSafely(manifestFile, after);
   return { report, changed: after !== before };
 }
@@ -142,8 +169,9 @@ async function runCli(argv) {
     console.log(`Thumbnails: ${report.made} encoded, ${report.kept} already present.`);
     console.log(changed ? 'Updated content.json.' : 'content.json unchanged.');
     if (report.failed.length) {
-      console.log(`${report.failed.length} image(s) will show their original instead:`);
+      console.log(`${report.failed.length} image(s) failed:`);
       report.failed.forEach(line => console.log(`  ! ${line}`));
+      process.exitCode = 1;
     }
     if (report.unused.length) {
       console.log(`${report.unused.length} file(s) in thumbs/ belong to no image in content.json:`);

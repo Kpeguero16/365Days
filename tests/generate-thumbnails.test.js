@@ -43,16 +43,51 @@ test('an image that fails to encode loses stale fields and falls back to its ori
   const root = fixture([
     { type: 'image', src: 'assets/images/bad.jpg', thumb: 'thumbs/images/old', width: 1, height: 1 },
     { type: 'image', src: 'assets/images/good.jpg' },
+    { type: 'image', src: 'assets/images/GOOD.png' },
   ]);
   const encode = async (source, outputs) => {
     if (source.endsWith('bad.jpg')) throw new Error('corrupt');
     return fakeEncode(source, outputs);
   };
   const { report } = await generateThumbnails({ root, encode, measure: fakeMeasure });
-  const [bad, good] = read(root);
+  const [bad, good, clash] = read(root);
   assert.deepEqual([bad.thumb, bad.width, bad.height], [undefined, undefined, undefined]);
   assert.equal(good.thumb, 'thumbs/images/good');
-  assert.match(report.failed[0], /bad\.jpg: corrupt/);
+  assert.equal(clash.thumb, undefined);
+  assert.match(report.failed.join('\n'), /bad\.jpg: corrupt/);
+  assert.match(report.failed.join('\n'), /GOOD\.png: .*same name/);
+});
+
+test('a failed size read keeps copies already on disk', async () => {
+  const root = fixture([{ type: 'image', src: 'assets/images/a.jpg' }]);
+  await generateThumbnails({ root, encode: fakeEncode, measure: fakeMeasure });
+  const { report } = await generateThumbnails({ root, encode: fakeEncode, measure: async () => { throw new Error('no size'); } });
+  assert.equal(read(root)[0].thumb, 'thumbs/images/a');
+  assert.match(report.failed[0], /existing copies stay in use/);
+});
+
+test('refuses to write when content.json changes during the run', async () => {
+  const root = fixture([{ type: 'image', src: 'assets/images/a.jpg' }]);
+  const edited = JSON.stringify({ items: [{ type: 'image', src: 'assets/images/a.jpg', caption: 'new' }] });
+  const encode = async (source, outputs) => {
+    fs.writeFileSync(path.join(root, 'content.json'), edited);
+    return fakeEncode(source, outputs);
+  };
+  await assert.rejects(generateThumbnails({ root, encode, measure: fakeMeasure }), /changed while this ran/);
+  assert.equal(fs.readFileSync(path.join(root, 'content.json'), 'utf8'), edited);
+});
+
+test('without ImageMagick nothing is changed', async () => {
+  const root = fixture([{ type: 'image', src: 'assets/images/a.jpg', thumb: 'thumbs/images/a', width: 8, height: 6 }]);
+  const before = fs.readFileSync(path.join(root, 'content.json'), 'utf8');
+  const savedPath = process.env.PATH;
+  process.env.PATH = '';
+  try {
+    await assert.rejects(generateThumbnails({ root }), /not on PATH; nothing was changed/);
+  } finally {
+    process.env.PATH = savedPath;
+  }
+  assert.equal(fs.readFileSync(path.join(root, 'content.json'), 'utf8'), before);
 });
 
 let hasMagick = true;
