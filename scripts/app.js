@@ -194,10 +194,10 @@
     return img;
   }
 
-  // srcset separates candidates with commas and whitespace, so a folder name
-  // containing either has to be percent-encoded to survive.
+  // srcset separates candidates with commas and whitespace, and `#` or `?`
+  // would end the path, so each segment of a folder name is percent-encoded.
   function thumbUrl(stem, width) {
-    return encodeURI(`${stem}-${width}.webp`).replace(/,/g, '%2C');
+    return `${stem}-${width}.webp`.split('/').map(encodeURIComponent).join('/');
   }
 
   function cssId(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }

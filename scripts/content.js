@@ -2,7 +2,10 @@
   const CONTENT_URL = 'content.json';
   async function loadContent() {
     try {
-      const res = await fetch(CONTENT_URL, { cache: 'no-cache' });
+      // Default cache mode, so this picks up the <link rel="preload"> in
+      // app.html in every browser. It is cached for the same 10 minutes GitHub
+      // Pages gives the scripts and images.
+      const res = await fetch(CONTENT_URL);
       if (!res.ok) throw new Error('Failed to load content');
       return await res.json();
     } catch (e) {
