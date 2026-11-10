@@ -105,7 +105,7 @@ Source: full repository review on 2026-09-08. All items are open; no fixes were 
   - **Double click:** it opened the viewer and closed it again. A backdrop click within 400ms of opening is now ignored.
   - **Tap after a swipe:** it was swallowed.
   - **Pinch zoom:** a sideways drag changed the photo instead of panning. The stage now allows panning while zoomed.
-  - **Trips:** they followed the rest of their season, so the wall was not oldest first. A trip now goes in where it begins.
+  - **Trips:** they followed the rest of their season, so the wall was not oldest first. A trip now goes in where it begins and keeps its photos together, so a photo outside the trip but dated during it comes after the trip's photos.
   - **Shared first row:** a month sharing its first row with the next month could never become current. Tracking now takes the first tile of the row at the line, and a month jump shows the month asked for once it lands.
   - **Mouse drag:** it stopped when the pointer strayed off the bar. The drag now captures the pointer.
   - **Screen readers:** the viewer's caption was not announced. It is now a polite live region.

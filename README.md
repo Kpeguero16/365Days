@@ -6,7 +6,7 @@ A romantic, elegant website created as an anniversary gift featuring photos, poe
 
 - **Date Gate**: Enter your anniversary date to access the site
 - **Welcome Experience**: Beautiful reveal after correct date entry
-- **Photo Wall**: Every photo and video at once, oldest first, with a card where each season and trip begins
+- **Photo Wall**: Every photo and video at once, oldest first, with a card where each season begins. A trip's photos stay together behind their own card, placed where the trip begins
 - **Month Bar**: One bar per month, sized by how many photos it holds; it shows where you are, and a click or a drag jumps there
 - **Viewer**: Full-screen photos with arrow keys, swipes and the date of each
 - **Background Music**: Rauw Alejandro - Todo de Ti (user-gesture controlled)

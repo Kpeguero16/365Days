@@ -51,8 +51,8 @@
     groups.forEach(sec => {
       addSeason(sec.season, sec.items.concat(...sec.trips.map(trip => trip.items)));
       // A season's poems come first, as they always have. Each trip then goes
-      // in where it begins among the other photos, so the wall stays oldest
-      // first.
+      // in where it begins and keeps its photos together behind its card, so
+      // a photo kept outside a trip but dated during it follows the trip.
       sec.items.filter(isPoem).forEach(addPoem);
       const trips = sec.trips.slice().sort((a, b) => (a.items[0].date < b.items[0].date ? -1 : 1));
       let next = 0;
