@@ -9,7 +9,7 @@ A romantic, elegant website created as an anniversary gift featuring photos, poe
 - **Timeline Navigation**: Sticky sidebar with season/year groupings and trip sub-sections
 - **Scroll Experience**: Smooth section-by-section scrolling with gentle animations
 - **Background Music**: Rauw Alejandro - Todo de Ti (user-gesture controlled)
-- **Responsive Images**: Lazy-loaded with responsive srcset
+- **Responsive Images**: 400px and 800px WebP copies chosen by `srcset`, lazy-loaded below the first screen
 - **Easter Eggs**: Hidden surprises throughout the site
 
 ## Easter Eggs
@@ -25,6 +25,11 @@ A romantic, elegant website created as an anniversary gift featuring photos, poe
 2. Add videos to `assets/videos/`
 3. Add poems/letters, or write a real caption for a photo, by editing `content.json`
 4. Run `node tools/generate-manifest.js` to pick up new assets
+5. Run `node tools/generate-thumbnails.js` to make the display-sized copies the
+   page loads (needs [ImageMagick 7](https://imagemagick.org)), then commit
+   `thumbs/` along with `content.json`. A photo without copies still shows,
+   from its full-size original, so skipping this step makes the page slower,
+   not broken.
 
 The generator merges rather than overwrites: captions, dates, trips, poems and any
 other field you edited are preserved, while `src`, `type` and `fileSize` are refreshed
