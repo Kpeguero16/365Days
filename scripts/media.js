@@ -19,6 +19,13 @@
       for (const e of entries) {
         if (e.isIntersecting) {
           const t = e.target;
+          // srcset goes first: setting src alone would start a download of
+          // the fallback before the browser could pick a better candidate.
+          const srcset = t.getAttribute('data-srcset');
+          if (srcset) {
+            t.setAttribute('srcset', srcset);
+            t.removeAttribute('data-srcset');
+          }
           const src = t.getAttribute('data-src');
           if (src) {
             t.setAttribute('src', src);
@@ -34,7 +41,10 @@
           io.unobserve(t);
         }
       }
-    }, { rootMargin: '200px 0px', threshold: 0 });
+    // The root is #content, the element that scrolls. With the viewport as
+    // root the margin never applied: #content clips its children, so media
+    // began loading only once it was already on screen.
+    }, { root: root === document ? null : root, rootMargin: '200px 0px', threshold: 0 });
     root.querySelectorAll('img[data-src], video[data-src]').forEach(el => io.observe(el));
   }
   window.MediaAPI = { setupReveals, lazyLoadMedia };

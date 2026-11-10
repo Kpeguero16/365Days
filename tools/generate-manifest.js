@@ -522,4 +522,7 @@ if (require.main === module) {
   runCli(process.argv.slice(2));
 }
 
-module.exports = { generateManifest, buildManifest, scanDirectory, ManifestError };
+module.exports = {
+  generateManifest, buildManifest, scanDirectory, ManifestError,
+  readExistingManifest, writeManifestSafely
+};
