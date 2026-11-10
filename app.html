@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/layout.css">
   <link rel="stylesheet" href="styles/effects.css">
+  <!-- The timeline cannot render until content.json arrives. Fetching it here
+       runs it alongside the scripts instead of after them. -->
+  <link rel="preload" href="content.json" as="fetch" crossorigin>
 </head>
 <body>
   <div class="app">
@@ -28,10 +31,12 @@
 
   <audio id="bgAudio" src="assets/audio/background.mp3" preload="none"></audio>
 
-  <script src="scripts/content.js" defer></script>
-  <script src="scripts/media.js" defer></script>
+  <!-- High priority for the three scripts the first render needs; otherwise
+       Chrome holds some of them back until the stylesheets finish. -->
+  <script src="scripts/content.js" defer fetchpriority="high"></script>
+  <script src="scripts/media.js" defer fetchpriority="high"></script>
   <script src="scripts/music.js" defer></script>
-  <script src="scripts/app.js" defer></script>
+  <script src="scripts/app.js" defer fetchpriority="high"></script>
   <script src="scripts/easter.js" defer></script>
 </body>
 </html>

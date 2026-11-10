@@ -141,12 +141,7 @@
       div.innerHTML = `<h3>${escapeHtml(item.title || 'Poem')}</h3><p>${escapeHtml(item.text || '')}</p>`;
       card.appendChild(div);
     } else {
-      const img = document.createElement('img');
-      img.alt = item.caption || '';
-      img.loading = 'lazy';
-      img.setAttribute('data-src', item.src);
-      // Only add srcset if @2x version exists (we'll check this in the lazy loader)
-      card.appendChild(img);
+      card.appendChild(renderImage(item));
     }
     const meta = document.createElement('div');
     meta.className = 'meta';
@@ -154,6 +149,55 @@
     meta.textContent = `${dateText}${item.caption ? ' · ' + item.caption : ''}`;
     card.appendChild(meta);
     return card;
+  }
+
+  // The first rows of cards skip the lazy loader, so the first screen starts
+  // downloading as soon as it is built instead of after an observer callback.
+  // Six is two rows of three on desktop and three rows of two on a phone; the
+  // first row is also fetched ahead of everything else.
+  const EAGER_IMAGES = 6;
+  const HIGH_PRIORITY_IMAGES = 3;
+  // Card widths from styles/layout.css: two columns with 16px padding and a
+  // 12px gap up to 520px, auto-fill columns of at most about 310px up to
+  // 900px, then three columns beside the 280px sidebar with 48px padding.
+  const IMAGE_SIZES = '(max-width: 520px) calc(50vw - 22px), (max-width: 900px) 310px, calc((100vw - 408px) / 3)';
+  let imagesRendered = 0;
+
+  // `thumb`, `width` and `height` come from tools/generate-thumbnails.js. An
+  // image without them, such as one added since that last ran, uses its
+  // original file and has no reserved height.
+  function renderImage(item) {
+    const img = document.createElement('img');
+    img.alt = item.caption || '';
+    img.decoding = 'async';
+    let src = item.src;
+    let srcset = '';
+    if (typeof item.thumb === 'string' && item.width > 0 && item.height > 0) {
+      img.width = item.width;
+      img.height = item.height;
+      img.sizes = IMAGE_SIZES;
+      const small = thumbUrl(item.thumb, 400);
+      const large = thumbUrl(item.thumb, 800);
+      srcset = item.width > 400 ? `${small} 400w, ${large} ${item.width}w` : `${large} ${item.width}w`;
+      src = small;
+    }
+    const index = imagesRendered++;
+    if (index < EAGER_IMAGES) {
+      if (index < HIGH_PRIORITY_IMAGES) img.fetchPriority = 'high';
+      if (srcset) img.srcset = srcset;
+      img.src = src;
+    } else {
+      img.loading = 'lazy';
+      if (srcset) img.setAttribute('data-srcset', srcset);
+      img.setAttribute('data-src', src);
+    }
+    return img;
+  }
+
+  // srcset separates candidates with commas and whitespace, so a folder name
+  // containing either has to be percent-encoded to survive.
+  function thumbUrl(stem, width) {
+    return encodeURI(`${stem}-${width}.webp`).replace(/,/g, '%2C');
   }
 
   function cssId(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }

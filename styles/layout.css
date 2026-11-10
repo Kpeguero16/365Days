@@ -99,6 +99,9 @@
        `visible` the other computes to `auto`, which clips just the same. */
     padding: 4px 0;
     gap: 6px;
+    /* The chips arrive with content.json. Holding their height (44px chip +
+       8px padding) keeps #content from being pushed down when they do. */
+    min-height: 52px;
   }
   /* 44px is the minimum comfortable touch target; the base padding and
      14px type give about 34px. */

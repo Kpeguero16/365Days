@@ -19,6 +19,13 @@
       for (const e of entries) {
         if (e.isIntersecting) {
           const t = e.target;
+          // srcset goes first: setting src alone would start a download of
+          // the fallback before the browser could pick a better candidate.
+          const srcset = t.getAttribute('data-srcset');
+          if (srcset) {
+            t.setAttribute('srcset', srcset);
+            t.removeAttribute('data-srcset');
+          }
           const src = t.getAttribute('data-src');
           if (src) {
             t.setAttribute('src', src);
