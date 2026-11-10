@@ -1,181 +1,163 @@
 (function(){
-  console.log('App.js script loaded');
   const contentEl = document.getElementById('content');
-  const timelineEl = document.getElementById('timeline');
-  
-  if (!contentEl) {
-    console.error('Content element not found');
+  const wallEl = document.getElementById('wall');
+  const monthsEl = document.getElementById('timeline');
+  const nowEl = document.getElementById('nowMonth');
+  const countEl = document.getElementById('photoCount');
+  const viewerEl = document.getElementById('viewer');
+
+  if (!contentEl || !wallEl || !monthsEl || !viewerEl) {
+    console.error('The page is missing part of its layout');
     return;
   }
-  if (!timelineEl) {
-    console.error('Timeline element not found');
-    return;
-  }
+
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'];
+  const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const ANNIVERSARY = '2021-09-11';
+  const DATE_SHAPE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+  // Tile shapes, as height / width. Videos have no recorded size yet (R20), so
+  // a video tile is a fixed 4:5 crop and nothing moves when it loads.
+  const SEASON_RATIO = 0.82;
+  const TRIP_RATIO = 0.5;
+  const VIDEO_RATIO = 1.25;
+  // The first tiles skip the lazy loader, so the first screen starts
+  // downloading as soon as it is built. Ten is about two rows at the widest
+  // layout; the first four are fetched ahead of everything else.
+  const EAGER_IMAGES = 10;
+  const HIGH_PRIORITY_IMAGES = 4;
+  // A month jump leaves this much of the wall above the month's first tile.
+  const JUMP_PAD = 12;
+
+  const tiles = [];       // every tile in wall order: { el, ratio, month, top }
+  const mediaTiles = [];  // the photo and video tiles among them
+  const viewable = [];    // their items, for the viewer
+  const bars = new Map(); // 'YYYY-MM' -> month bar
+  let imagesRendered = 0;
+  let laidOutWidth = 0;
+  let updateSpy = null;   // set once the month bar exists
+  let pinned = null;      // the month a jump asked for: { month, scrollTop, reached }
 
   async function render() {
-    console.log('App render started');
     const data = await window.ContentAPI.loadContent();
-    console.log('Content loaded:', data);
     const groups = window.ContentAPI.groupBySeason(data.items || []);
-    console.log('Groups created:', groups);
+    if (!groups.length) {
+      showMessage('No photos to show. Refresh the page to try again.');
+      return;
+    }
 
-    const sections = groups.length ? groups : [
-      {
-        season: 'Autumn 2021',
-        items: [
-          { type: 'image', src: 'assets/images/0E13A9A5-2409-4353-A8D2-81F2F377DF48_1_105_c.jpeg', date: '2021-09-12', caption: 'A day after' },
-          { type: 'image', src: 'assets/images/2D636C04-9879-4A3F-BF79-0A0A57D208C6_1_105_c.jpeg', date: '2021-10-01', caption: 'Smiles' }
-        ]
+    const sizes = `${Math.ceil(window.WallLayout.pack([], wallEl.clientWidth).columnWidth)}px`;
+    groups.forEach(sec => {
+      addSeason(sec.season, sec.items.concat(...sec.trips.map(trip => trip.items)));
+      // A season's poems come first, as they always have. Each trip then goes
+      // in where it begins and keeps its photos together behind its card, so
+      // a photo kept outside a trip but dated during it follows the trip.
+      sec.items.filter(isPoem).forEach(addPoem);
+      const trips = sec.trips.slice().sort((a, b) => (a.items[0].date < b.items[0].date ? -1 : 1));
+      let next = 0;
+      for (const item of sec.items.filter(item => !isPoem(item))) {
+        while (next < trips.length && trips[next].items[0].date < item.date) addTrip(trips[next++], sizes);
+        addMedia(item, sizes);
       }
-    ];
-
-    timelineEl.innerHTML = '';
-    sections.forEach(sec => {
-      const a = document.createElement('a');
-      a.href = `#${cssId(sec.season)}`;
-      a.textContent = sec.season;
-      timelineEl.appendChild(a);
-      
-      // Add trip links
-      if (sec.trips && sec.trips.length > 0) {
-        sec.trips.forEach(trip => {
-          const tripLink = document.createElement('a');
-          tripLink.href = `#${cssId(sec.season)}-${cssId(trip.trip)}`;
-          tripLink.textContent = trip.trip;
-          tripLink.className = 'trip';
-          timelineEl.appendChild(tripLink);
-        });
-      }
+      while (next < trips.length) addTrip(trips[next++], sizes);
     });
+    const fragment = document.createDocumentFragment();
+    tiles.forEach(t => fragment.appendChild(t.el));
+    wallEl.appendChild(fragment);
 
-    contentEl.innerHTML = '';
-    sections.forEach(sec => {
-      const secEl = document.createElement('section');
-      secEl.className = 'section';
-      secEl.id = cssId(sec.season);
-      secEl.innerHTML = `
-        <div class="section-header">
-          <h2 class="section-title">${sec.season}</h2>
-        </div>
-        <div class="grid"></div>
-        <div></div>
-      `;
-      const grid = secEl.querySelector('.grid');
-      
-      // Separate poems and other items
-      const poems = sec.items.filter(item => item.type === 'poem');
-      const otherItems = sec.items.filter(item => item.type !== 'poem');
-      
-      // Add poems first, spanning full width
-      poems.forEach(poem => {
-        const poemCard = renderItem(poem);
-        poemCard.style.gridColumn = '1 / -1'; // Span all columns
-        grid.appendChild(poemCard);
-      });
-      
-      // Add other items
-      otherItems.forEach(item => {
-        grid.appendChild(renderItem(item));
-      });
-      
-      // The season goes in before its trips. Navigation lists the season link
-      // first and its trip links after it, so appending the trips first put
-      // every season's trips ahead of the season they belong to, immediately
-      // after the previous season's content.
-      contentEl.appendChild(secEl);
+    countEl.textContent = countLabel(viewable, ' · ');
 
-      // Add trip subsections
-      if (sec.trips && sec.trips.length > 0) {
-        sec.trips.forEach(trip => {
-          const tripEl = document.createElement('div');
-          tripEl.className = 'trip-section';
-          tripEl.id = `${cssId(sec.season)}-${cssId(trip.trip)}`;
-          tripEl.innerHTML = `
-            <h3 class="trip-title">${escapeHtml(trip.trip)}</h3>
-            <div class="grid"></div>
-          `;
-          const tripGrid = tripEl.querySelector('.grid');
-          
-          // Separate poems and other items for trips too
-          const tripPoems = trip.items.filter(item => item.type === 'poem');
-          const tripOtherItems = trip.items.filter(item => item.type !== 'poem');
-          
-          // Add poems first, spanning full width
-          tripPoems.forEach(poem => {
-            const poemCard = renderItem(poem);
-            poemCard.style.gridColumn = '1 / -1'; // Span all columns
-            tripGrid.appendChild(poemCard);
-          });
-          
-          // Add other items
-          tripOtherItems.forEach(item => {
-            tripGrid.appendChild(renderItem(item));
-          });
-          contentEl.appendChild(tripEl);
-        });
-      }
-    });
-
-    setupScrollSpy();
-    setupSidebarNavigation();
+    layout();
+    // Relayout when the wall's width changes, including when #content gains
+    // its scrollbar after the first layout. Deferred a frame, because the
+    // relayout changes the wall's height inside the observer's callback.
+    new ResizeObserver(() => requestAnimationFrame(layout)).observe(wallEl);
+    if (mediaTiles.length) {
+      buildMonthBar();
+      setupScrollSpy();
+      setupViewer();
+    }
     window.MediaAPI.setupReveals(contentEl);
     window.MediaAPI.lazyLoadMedia(contentEl);
   }
 
-  function renderItem(item) {
-    const card = document.createElement('article');
-    card.className = 'card reveal';
-    if (item.type === 'video') {
-      const v = document.createElement('video');
-      v.setAttribute('muted', '');
-      v.setAttribute('loop', '');
-      v.setAttribute('playsinline', '');
-      v.setAttribute('preload', 'none');
-      v.setAttribute('data-src', item.src);
-      if (item.poster) v.setAttribute('data-poster', item.poster);
-      card.appendChild(v);
-    } else if (item.type === 'poem') {
-      card.classList.add('poem');
-      const div = document.createElement('div');
-      div.style.padding = '20px';
-      div.innerHTML = `<h3>${escapeHtml(item.title || 'Poem')}</h3><p>${escapeHtml(item.text || '')}</p>`;
-      card.appendChild(div);
-    } else {
-      card.appendChild(renderImage(item));
-    }
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const dateText = item.date ? new Date(item.date + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-    meta.textContent = `${dateText}${item.caption ? ' · ' + item.caption : ''}`;
-    card.appendChild(meta);
-    return card;
+  function addSeason(label, items) {
+    const media = items.filter(item => item.type !== 'poem');
+    const [name, ...years] = label.split(' ');
+    const el = document.createElement('div');
+    el.className = `tile tile-season season-${name.toLowerCase()}`;
+    const heading = document.createElement('h2');
+    heading.append(span('season-name', name), ' ', span('season-year', years.join(' ')));
+    const count = document.createElement('p');
+    count.textContent = `${plural(new Set(media.map(item => item.date)).size, 'day')} / ${countLabel(media, ' / ')}`;
+    el.append(heading, count);
+    tiles.push({ el, ratio: SEASON_RATIO, month: null, top: 0 });
   }
 
-  // The first rows of cards skip the lazy loader, so the first screen starts
-  // downloading as soon as it is built instead of after an observer callback.
-  // Six is two rows of three on desktop and three rows of two on a phone; the
-  // first row is also fetched ahead of everything else.
-  const EAGER_IMAGES = 6;
-  const HIGH_PRIORITY_IMAGES = 3;
-  // Card widths from styles/layout.css: two columns with 16px padding and a
-  // 12px gap up to 520px, auto-fill columns of at most about 310px up to
-  // 900px, then three columns beside the 280px sidebar with 48px padding.
-  const IMAGE_SIZES = '(max-width: 520px) calc(50vw - 22px), (max-width: 900px) 310px, calc((100vw - 408px) / 3)';
-  let imagesRendered = 0;
+  // A trip's card, its poems, then its photos.
+  function addTrip(trip, sizes) {
+    const el = document.createElement('div');
+    el.className = 'tile tile-trip';
+    const heading = document.createElement('h3');
+    heading.textContent = trip.trip;
+    const count = document.createElement('p');
+    count.textContent = countLabel(trip.items.filter(item => !isPoem(item)), ' / ');
+    el.append(heading, count);
+    // Taller for a longer name, which wraps on a narrow column.
+    const ratio = Math.min(1.2, TRIP_RATIO + 0.12 * Math.max(0, Math.ceil(trip.trip.length / 14) - 1));
+    tiles.push({ el, ratio, month: null, top: 0 });
+    trip.items.filter(isPoem).forEach(addPoem);
+    trip.items.filter(item => !isPoem(item)).forEach(item => addMedia(item, sizes));
+  }
+
+  function addPoem(item) {
+    const el = document.createElement('article');
+    el.className = 'tile tile-poem reveal';
+    const title = document.createElement('h3');
+    title.textContent = item.title || 'Poem';
+    const text = document.createElement('p');
+    text.textContent = item.text || '';
+    el.append(title, text);
+    // Taller for longer poems; the tile scrolls if the guess is short.
+    const lines = Math.max((item.text || '').split('\n').length, Math.ceil((item.text || '').length / 34));
+    tiles.push({ el, ratio: Math.min(2.4, 0.5 + 0.09 * lines), month: null, top: 0 });
+  }
+
+  function addMedia(item, sizes) {
+    const date = validDate(item.date);
+    const isVideo = item.type === 'video';
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'tile tile-media reveal';
+    el.dataset.index = String(viewable.push(item) - 1);
+    el.setAttribute('aria-label', `${isVideo ? 'Video' : 'Photo'}, ${longDate(date)}${item.caption ? `, ${item.caption}` : ''}`);
+    el.appendChild(isVideo ? renderVideo(item) : renderImage(item, sizes));
+    const label = span('tile-label', `${shortDate(date)}${isVideo ? ' ▶' : ''}`);
+    label.setAttribute('aria-hidden', 'true');
+    el.appendChild(label);
+    const tile = { el, ratio: !isVideo && hasCopies(item) ? item.height / item.width : VIDEO_RATIO, month: date.slice(0, 7), top: 0 };
+    tiles.push(tile);
+    mediaTiles.push(tile);
+  }
 
   // `thumb`, `width` and `height` come from tools/generate-thumbnails.js. An
   // image without them, such as one added since that last ran, uses its
-  // original file and has no reserved height.
-  function renderImage(item) {
+  // original file and gets the video tile's shape.
+  function hasCopies(item) {
+    return typeof item.thumb === 'string' && item.width > 0 && item.height > 0;
+  }
+
+  function renderImage(item, sizes) {
     const img = document.createElement('img');
-    img.alt = item.caption || '';
+    img.alt = '';
     img.decoding = 'async';
     let src = item.src;
     let srcset = '';
-    if (typeof item.thumb === 'string' && item.width > 0 && item.height > 0) {
+    if (hasCopies(item)) {
       img.width = item.width;
       img.height = item.height;
-      img.sizes = IMAGE_SIZES;
+      img.sizes = sizes;
       const small = thumbUrl(item.thumb, 400);
       const large = thumbUrl(item.thumb, 800);
       srcset = item.width > 400 ? `${small} 400w, ${large} ${item.width}w` : `${large} ${item.width}w`;
@@ -194,97 +176,331 @@
     return img;
   }
 
+  function renderVideo(item) {
+    const v = document.createElement('video');
+    v.setAttribute('muted', '');
+    v.setAttribute('loop', '');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('preload', 'none');
+    v.setAttribute('data-src', item.src);
+    if (item.poster) v.setAttribute('data-poster', item.poster);
+    return v;
+  }
+
   // srcset separates candidates with commas and whitespace, and `#` or `?`
   // would end the path, so each segment of a folder name is percent-encoded.
   function thumbUrl(stem, width) {
     return `${stem}-${width}.webp`.split('/').map(encodeURIComponent).join('/');
   }
 
-  function cssId(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+  function layout() {
+    const width = wallEl.clientWidth;
+    if (!width || width === laidOutWidth) return;
+    // A relayout, such as a phone turning sideways, keeps the photo at the
+    // tracking line where it was on screen; left alone, the old scroll
+    // position would land in another month.
+    const anchor = laidOutWidth && mediaTiles.length ? tileAtLine() : null;
+    const offset = anchor ? (contentEl.scrollTop - wallEl.offsetTop - anchor.top) / anchor.height : 0;
+    laidOutWidth = width;
+    const { positions, height, columnWidth } = window.WallLayout.pack(tiles.map(t => t.ratio), width);
+    tiles.forEach((t, i) => {
+      const p = positions[i];
+      t.top = p.y;
+      t.height = p.height;
+      Object.assign(t.el.style, { left: `${p.x}px`, top: `${p.y}px`, width: `${p.width}px`, height: `${p.height}px` });
+    });
+    wallEl.style.height = `${height}px`;
+    const sizes = `${Math.ceil(columnWidth)}px`;
+    wallEl.querySelectorAll('img[sizes]').forEach(img => { img.sizes = sizes; });
+    if (anchor) {
+      pinned = null;
+      contentEl.scrollTop = wallEl.offsetTop + anchor.top + offset * anchor.height;
+    }
+    if (updateSpy) updateSpy();
+  }
 
-  // Scroll spy. This reads scroll position rather than observing
-  // intersections. `intersectionRatio` divides by *target* area, so a short
-  // section sitting inside the viewport outscores a tall one filling it —
-  // measured mid-page in real content, a 1450px section holding 238px of the
-  // activation band beat a 2476px section holding 279px. A section taller
-  // than the band divided by the smallest threshold also never reports as
-  // intersecting at all, because `isIntersecting` follows the threshold
-  // index. Seasons here run from one screen to ten screens tall, so both
-  // cases are ordinary rather than edge cases. Comparing positions is
-  // independent of how tall a target is.
+  // Month bar: one bar per month from the first photo to the last.
+  function buildMonthBar() {
+    const counts = new Map();
+    mediaTiles.forEach(t => counts.set(t.month, (counts.get(t.month) || 0) + 1));
+    const keys = Array.from(counts.keys()).sort();
+    const max = Math.max(...counts.values());
+    const [firstYear, firstMonth] = keys[0].split('-').map(Number);
+    for (let i = 0; ; i++) {
+      const y = firstYear + Math.floor((firstMonth - 1 + i) / 12);
+      const m = (firstMonth - 1 + i) % 12 + 1;
+      const key = `${y}-${String(m).padStart(2, '0')}`;
+      if (key > keys[keys.length - 1]) break;
+      const n = counts.get(key) || 0;
+      const bar = document.createElement('button');
+      bar.type = 'button';
+      bar.className = 'month';
+      bar.dataset.month = key;
+      bar.tabIndex = -1;
+      bar.disabled = n === 0;
+      // Square root, so a quiet month still shows next to a busy one.
+      bar.style.setProperty('--h', n ? `${Math.max(12, Math.round(Math.sqrt(n / max) * 100))}%` : '6%');
+      bar.setAttribute('aria-label', `${MONTHS[m - 1]} ${y}, ${plural(n, 'photo')}`);
+      bar.title = `${MONTHS[m - 1]} ${y}: ${plural(n, 'photo')}`;
+      if (m === 1 || key === keys[0]) bar.dataset.year = String(y);
+      monthsEl.appendChild(bar);
+      bars.set(key, bar);
+    }
+
+    // Dragging across the bar, with a finger or a mouse, scrubs through
+    // months. The click that ends a drag is ignored, since on a touch screen
+    // it lands on the bar the drag started from.
+    let drag = null;
+    let dragEnded = 0;
+    monthsEl.addEventListener('pointerdown', e => {
+      drag = e.pointerType === 'mouse' && e.button !== 0 ? null : { x: e.clientX, moved: false };
+    });
+    monthsEl.addEventListener('pointermove', e => {
+      if (!drag || !e.buttons || (!drag.moved && Math.abs(e.clientX - drag.x) < 4)) return;
+      if (!drag.moved) {
+        drag.moved = true;
+        // Captured only once it is a drag, so a mouse can stray off the bar
+        // without ending it. Capturing on pointerdown would retarget a plain
+        // click to the nav, where no bar would be found.
+        monthsEl.setPointerCapture(e.pointerId);
+      }
+      const bar = barAt(e.clientX);
+      if (bar && !bar.disabled) jumpTo(bar.dataset.month, false);
+    });
+    const endDrag = () => {
+      if (drag && drag.moved) dragEnded = performance.now();
+      drag = null;
+    };
+    monthsEl.addEventListener('pointerup', endDrag);
+    monthsEl.addEventListener('pointercancel', endDrag);
+    monthsEl.addEventListener('click', e => {
+      if (performance.now() - dragEnded < 400) return;
+      const bar = e.target.closest('.month');
+      if (bar && !bar.disabled) jumpTo(bar.dataset.month, true);
+    });
+    // One tab stop for the whole bar; the arrow keys move between months.
+    monthsEl.addEventListener('keydown', e => {
+      const enabled = Array.from(bars.values()).filter(b => !b.disabled);
+      const i = enabled.indexOf(document.activeElement);
+      if (i < 0) return;
+      const next = { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: enabled.length - 1 }[e.key];
+      if (next === undefined) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const bar = enabled[Math.max(0, Math.min(enabled.length - 1, next))];
+      bar.focus();
+      jumpTo(bar.dataset.month, false);
+    });
+  }
+
+  function barAt(x) {
+    const all = Array.from(bars.values());
+    const rect = monthsEl.getBoundingClientRect();
+    return all[Math.floor((x - rect.left) / rect.width * all.length)];
+  }
+
+  // The tile at the tracking line, a line just below the top of #content: of
+  // the tiles that start above the line, the first one in the last row they
+  // reach. Tile tops never decrease in wall order (see scripts/wall.js), so
+  // the scan stops at the first tile below the line, and a month's first tile
+  // is also its highest.
+  function tileAtLine() {
+    const line = contentEl.scrollTop - wallEl.offsetTop + JUMP_PAD + 1;
+    let found = mediaTiles[0];
+    for (const t of mediaTiles) {
+      if (t.top > line) break;
+      if (t.top > found.top) found = t;
+    }
+    return found;
+  }
+
+  function jumpTo(month, smooth) {
+    const tile = mediaTiles.find(t => t.month === month);
+    if (!tile) return;
+    const max = contentEl.scrollHeight - contentEl.clientHeight;
+    const top = Math.max(0, Math.min(max, Math.round(wallEl.offsetTop + tile.top - JUMP_PAD)));
+    // Once the jump lands, the bar shows the month asked for, even when that
+    // month shares its first row with the month before it.
+    pinned = { month, scrollTop: top, reached: false };
+    contentEl.scrollTo({ top, behavior: smooth && !reducedMotion() ? 'smooth' : 'auto' });
+    updateSpy();
+  }
+
   function setupScrollSpy() {
-    const links = Array.from(timelineEl.querySelectorAll('a'));
-    const map = new Map(links.map(a => [a.getAttribute('href')?.slice(1), a]));
-    // Seasons and trips together, in document order, so a trip chip can go
-    // active too. Trips were previously left out of this entirely.
-    const targets = Array.from(contentEl.querySelectorAll('.section, .trip-section'));
-    if (!targets.length) return;
-
-    function activeTarget() {
-      // At the end of the scroller a short final target may never reach the
-      // line, and it is what the reader is looking at regardless.
-      if (contentEl.scrollTop + contentEl.clientHeight >= contentEl.scrollHeight - 2) {
-        return targets[targets.length - 1];
+    let current = null;
+    updateSpy = () => {
+      const top = contentEl.scrollTop;
+      let month;
+      if (pinned && Math.abs(top - pinned.scrollTop) < 2) {
+        pinned.reached = true;
+        month = pinned.month;
+      } else {
+        // A pin lasts until the reader scrolls away from where it landed.
+        if (pinned && pinned.reached) pinned = null;
+        month = top + contentEl.clientHeight >= contentEl.scrollHeight - 2
+          ? mediaTiles[mediaTiles.length - 1].month
+          : tileAtLine().month;
       }
-      // Positions are read each time rather than cached at render: media
-      // loads lazily and changes section heights as it arrives.
-      const contentTop = contentEl.getBoundingClientRect().top;
-      // The activation line sits a quarter of the way down the scrollport, so
-      // a section becomes current once it has properly arrived rather than
-      // when its first pixel appears.
-      const line = contentEl.clientHeight * 0.25;
-      let current = targets[0];
-      for (const el of targets) {
-        if (el.getBoundingClientRect().top - contentTop > line) break;
-        current = el;
+      if (month === current) return;
+      if (current) {
+        const old = bars.get(current);
+        old.classList.remove('active');
+        old.removeAttribute('aria-current');
+        old.tabIndex = -1;
       }
-      return current;
-    }
-
-    function update() {
-      const active = map.get(activeTarget().id);
-      links.forEach(a => a.classList.toggle('active', a === active));
-    }
-
+      const bar = bars.get(month);
+      bar.classList.add('active');
+      bar.setAttribute('aria-current', 'true');
+      bar.tabIndex = 0;
+      const [y, m] = month.split('-').map(Number);
+      nowEl.textContent = `${MONTHS[m - 1]} ${y}`;
+      current = month;
+    };
     let queued = false;
     contentEl.addEventListener('scroll', () => {
       if (queued) return;
       queued = true;
-      requestAnimationFrame(() => { queued = false; update(); });
+      requestAnimationFrame(() => { queued = false; updateSpy(); });
     }, { passive: true });
-
-    update();
+    updateSpy();
   }
 
-  function setupSidebarNavigation() {
-    timelineEl.addEventListener('click', (e) => {
-      e.preventDefault();
-      const href = e.target.getAttribute('href');
-      if (!href) return;
-      
-      const target = document.querySelector(href);
-      if (target) {
-        // Temporarily disable scroll-snap for smooth navigation
-        contentEl.style.scrollSnapType = 'none';
-        
-        // Use scrollIntoView with smooth behavior for the animation
-        target.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start',
-          inline: 'nearest'
-        });
-        
-        // Re-enable scroll-snap after scroll completes
-        setTimeout(() => {
-          contentEl.style.scrollSnapType = 'y mandatory';
-        }, 1000);
+  function setupViewer() {
+    const stage = viewerEl.querySelector('.viewer-stage');
+    const info = viewerEl.querySelector('.viewer-info');
+    let at = -1;
+    let openedAt = 0;
+    let swipeX = null;
+    let swiped = false;
+    const vv = window.visualViewport;
+    // Zoomed in, a sideways drag pans the photo instead of changing it.
+    const zoomed = () => !!vv && vv.scale > 1.01;
+    if (vv) vv.addEventListener('resize', () => viewerEl.classList.toggle('zoomed', zoomed()));
+
+    function show(i) {
+      at = (i + viewable.length) % viewable.length;
+      const item = viewable[at];
+      let media;
+      if (item.type === 'video') {
+        media = document.createElement('video');
+        Object.assign(media, { src: item.src, controls: true, autoplay: true, muted: true, loop: true, playsInline: true });
+      } else {
+        media = document.createElement('img');
+        media.alt = item.caption || '';
+        if (hasCopies(item)) {
+          media.width = item.width;
+          media.height = item.height;
+          media.src = thumbUrl(item.thumb, 800);
+        } else {
+          media.src = item.src;
+        }
+      }
+      stage.replaceChildren(media);
+      const date = validDate(item.date);
+      const [y, m, d] = date.split('-');
+      const parts = [`${String(at + 1).padStart(3, '0')} / ${viewable.length}`,
+        `${WEEKDAYS[weekday(date)]} ${d} ${MONTHS[m - 1].slice(0, 3)} ${y}`];
+      if (item.caption) parts.push(item.caption);
+      if (date.slice(5) === ANNIVERSARY.slice(5) && date >= ANNIVERSARY) parts.push(`${anniversary(date)} ♥`);
+      info.textContent = parts.join('    ');
+    }
+    function open(i) {
+      openedAt = performance.now();
+      show(i);
+      viewerEl.hidden = false;
+      viewerEl.querySelector('.viewer-close').focus();
+    }
+    function close() {
+      viewerEl.hidden = true;
+      stage.replaceChildren();
+      // Back to the last photo viewed, which scrolls the wall to it.
+      wallEl.querySelector(`.tile-media[data-index="${at}"]`)?.focus();
+    }
+
+    wallEl.addEventListener('click', e => {
+      const tile = e.target.closest('.tile-media');
+      if (tile) open(Number(tile.dataset.index));
+    });
+    viewerEl.addEventListener('click', e => {
+      const step = e.target.closest('[data-step]');
+      if (step) show(at + Number(step.dataset.step));
+      // A click on the dark backdrop closes, unless it ends a swipe or is the
+      // second click of the double click that opened the viewer.
+      else if (e.target.closest('.viewer-close') || (e.target === stage && !swiped && performance.now() - openedAt > 400)) close();
+      swiped = false;
+    });
+    stage.addEventListener('pointerdown', e => {
+      swipeX = e.clientX;
+      swiped = false;
+    });
+    stage.addEventListener('pointerup', e => {
+      if (swipeX === null) return;
+      const dx = e.clientX - swipeX;
+      swipeX = null;
+      if (Math.abs(dx) < 50 || zoomed()) return;
+      swiped = true;
+      show(at + (dx < 0 ? 1 : -1));
+    });
+    window.addEventListener('keydown', e => {
+      if (viewerEl.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(at - 1);
+      else if (e.key === 'ArrowRight') show(at + 1);
+      else if (e.key === 'Tab') {
+        // Keep focus inside the viewer while it is open.
+        const focusable = Array.from(viewerEl.querySelectorAll('button, video[controls]'));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!viewerEl.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
   }
 
-  function escapeHtml(s='') {
-    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt','"':'&quot;','\'':'&#39;'}[c]));
+  function showMessage(text) {
+    const p = document.createElement('p');
+    p.className = 'wall-message';
+    p.textContent = text;
+    wallEl.style.height = '';
+    wallEl.replaceChildren(p);
   }
+
+  // Dates are read from the string and never through a local Date, so nothing
+  // shown depends on the viewer's timezone.
+  function validDate(date) { return DATE_SHAPE.test(date || '') ? date : ANNIVERSARY; }
+  function weekday(date) {
+    const [y, m, d] = date.split('-').map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  }
+  function shortDate(date) {
+    const [y, m, d] = date.split('-');
+    return `${d} ${MONTHS[m - 1].slice(0, 3).toUpperCase()} ${y}`;
+  }
+  function longDate(date) {
+    const [y, m, d] = date.split('-').map(Number);
+    return `${MONTHS[m - 1]} ${d}, ${y}`;
+  }
+  function anniversary(date) {
+    const years = Number(date.slice(0, 4)) - Number(ANNIVERSARY.slice(0, 4));
+    if (years === 0) return 'day one';
+    const teen = years % 100 >= 11 && years % 100 <= 13;
+    const suffix = teen ? 'th' : { 1: 'st', 2: 'nd', 3: 'rd' }[years % 10] || 'th';
+    return `${years}${suffix} anniversary`;
+  }
+  function plural(n, word) { return `${n} ${word}${n === 1 ? '' : 's'}`; }
+  function isPoem(item) { return item.type === 'poem'; }
+  function countLabel(items, separator) {
+    const videos = items.filter(item => item.type === 'video').length;
+    return plural(items.length - videos, 'photo') + (videos ? `${separator}${plural(videos, 'video')}` : '');
+  }
+  function span(className, text) {
+    const s = document.createElement('span');
+    s.className = className;
+    s.textContent = text;
+    return s;
+  }
+  function reducedMotion() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   // Check if user is authorized
   if (sessionStorage.getItem('unlocked') !== '1') {
@@ -292,13 +508,8 @@
     return;
   }
 
-  // Render the app immediately. Navigation, scroll spy, reveals and lazy
-  // loading are registered at the end of render(), where the DOM they observe
-  // has just been built; registering them here as well gave every chip two
-  // click handlers and every media element two loading observers, and the
-  // second observer re-ran load()/play() on videos the first had started.
   render().catch(err => {
     console.error('Render failed:', err);
-    contentEl.innerHTML = '<div style="padding: 48px; text-align: center;"><h2>Welcome to our journey</h2><p>Content is loading...</p></div>';
+    showMessage('The photos did not load. Refresh the page to try again.');
   });
 })();
