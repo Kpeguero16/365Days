@@ -2,7 +2,9 @@
   --bg: #faf7f5;
   --text: #1f1d1d;
   --muted: #6e6561;
-  --accent: #b27777;
+  /* Dark enough for 4.5:1 as text on the active chip (#efe7e5) and behind
+     the gate button's white text; the earlier #b27777 gave 2.97 and 3.62. */
+  --accent: #935454;
   --card: #ffffff;
   --shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
