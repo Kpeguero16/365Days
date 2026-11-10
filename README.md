@@ -6,17 +6,18 @@ A romantic, elegant website created as an anniversary gift featuring photos, poe
 
 - **Date Gate**: Enter your anniversary date to access the site
 - **Welcome Experience**: Beautiful reveal after correct date entry
-- **Timeline Navigation**: Sticky sidebar with season/year groupings and trip sub-sections
-- **Scroll Experience**: Smooth section-by-section scrolling with gentle animations
+- **Photo Wall**: Every photo and video at once, oldest first, with a card where each season and trip begins
+- **Month Bar**: One bar per month, sized by how many photos it holds; it shows where you are, and a click or a drag jumps there
+- **Viewer**: Full-screen photos with arrow keys, swipes and the date of each
 - **Background Music**: Rauw Alejandro - Todo de Ti (user-gesture controlled)
 - **Responsive Images**: 400px and 800px WebP copies chosen by `srcset`, lazy-loaded below the first screen
 - **Easter Eggs**: Hidden surprises throughout the site
 
 ## Easter Eggs
 
-- **Triple-click** anywhere on content → Black cat confetti 🐈‍⬛
+- **Triple-click** a season card or the space between photos → Black cat confetti 🐈‍⬛
 - **Press P** → Puppy confetti 🐶
-- **Click "For Us"** brand → Heart confetti ❤️
+- **Click "365 Days"** title → Heart confetti ❤️
 - **Konami Code** (↑↑↓↓←→←→BA) → Surprise celebration 🎉
 
 ## Content Management
@@ -47,7 +48,7 @@ This site is designed for GitHub Pages deployment. Simply push to your repositor
 ## Technical Details
 
 - Pure HTML/CSS/JavaScript (no frameworks)
-- CSS Grid + Flexbox layout
+- Columns packed by `scripts/wall.js`, shortest column first
 - Intersection Observer for scroll effects
 - Local storage for music preferences
 - Lazy loading for performance

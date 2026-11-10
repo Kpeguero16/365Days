@@ -1,7 +1,12 @@
-.reveal { opacity: 0; transform: translateY(12px); transition: opacity 420ms ease, transform 420ms ease; }
-.reveal.in { opacity: 1; transform: translateY(0); }
-.section-title { font-size: 28px; }
-.section { opacity: 0; transform: translateY(20px); transition: opacity 600ms ease, transform 600ms ease; }
-.section.in { opacity: 1; transform: translateY(0); }
-.card { transition: transform 200ms ease, box-shadow 200ms ease; }
-.card:hover { transform: translateY(-2px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+.reveal { opacity: 0; transition: opacity 420ms ease; }
+.reveal.in { opacity: 1; }
+.tile-media img, .tile-media video { transition: transform 600ms cubic-bezier(.2, .8, .2, 1); }
+.tile-media:hover img, .tile-media:hover video { transform: scale(1.035); }
+.tile-label { transition: opacity 200ms ease; }
+.month::before { transition: background-color 150ms ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transition: none; }
+  .tile-media img, .tile-media video { transition: none; }
+  .tile-media:hover img, .tile-media:hover video { transform: none; }
+}
